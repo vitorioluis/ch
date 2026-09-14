@@ -20,22 +20,19 @@
         h2 { margin-bottom: 15px; font-size: 20px; }
         .screen { display: none; }
         .active { display: block; }
-        input[type="text"] { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
         .options-group { text-align: left; margin: 15px 0; background: #f0f2f5; padding: 15px; border-radius: 8px; }
         .checkbox-container { display: block; margin-bottom: 12px; cursor: pointer; font-size: 16px; }
         button { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; }
         .hud { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; background: #eee; padding: 10px; border-radius: 8px; }
         .quiz-btn { background: #f0f2f5; color: var(--dark); border: 2px solid #ddd; text-align: left; padding: 15px; margin: 10px 0; border-radius: 8px; font-size: 18px; width: 100%; cursor: pointer; }
-        .ranking-table { width: 100%; margin: 20px 0; border-collapse: collapse; text-align: left; }
-        .ranking-table th, .ranking-table td { padding: 10px; border-bottom: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
 <div class="card">
+    <!-- TELA INICIAL -->
     <div id="setup-screen" class="screen active">
         <h1>🏆 Quiz Campo Harmônico</h1>
-        <input type="text" id="player-name" placeholder="Seu nome..." maxlength="15">
         
         <div class="options-group">
             <p style="font-weight: bold; margin-bottom: 10px;">Escolha os Campos:</p>
@@ -52,6 +49,7 @@
         <button onclick="startGame()">Iniciar Jogo</button>
     </div>
 
+    <!-- TELA DO JOGO -->
     <div id="game-screen" class="screen">
         <div class="hud">
             <div>Pontos: <span id="score-display">0</span></div>
@@ -61,21 +59,10 @@
         <div id="answers-container"></div>
     </div>
 
+    <!-- TELA DE GAME OVER -->
     <div id="gameover-screen" class="screen">
         <h1 style="color: var(--danger)">Fim de Jogo!</h1>
-        <p style="font-size: 18px; margin-bottom: 15px;">Pontuação: <strong id="final-score">0</strong></p>
-        
-        <h3>🏆 TOP 5 RANKING</h3>
-        <table class="ranking-table">
-            <thead>
-                <tr>
-                    <th>Pos</th>
-                    <th>Nome</th>
-                    <th>Pontos</th>
-                </tr>
-            </thead>
-            <tbody id="ranking-body"></tbody>
-        </table>
+        <p style="font-size: 18px; margin-bottom: 15px;">Pontuação Final: <strong id="final-score">0</strong></p>
         <button onclick="restartGame()">Jogar Novamente</button>
     </div>
 </div>
@@ -105,7 +92,6 @@
 
     const grausRomanos = ["I", "II", "III", "IV", "V", "VI", "VII"];
     let poolPerguntas = [];
-    let nomeJogador = "";
     let pontuacao = 0;
     let vidas = 3;
     let respostaCorretaAtual = "";
@@ -119,8 +105,6 @@
     }
 
     function startGame() {
-        nomeJogador = document.getElementById("player-name").value.trim() || "Jogador";
-        
         poolPerguntas = [];
         if (document.getElementById("chk-maior").checked) poolPerguntas.push(...database.maior);
         if (document.getElementById("chk-menor").checked) poolPerguntas.push(...database.menor);
@@ -202,24 +186,6 @@
 
     function gameOver() {
         document.getElementById("final-score").innerText = pontuacao;
-        
-        let ranking = [];
-        try {
-            ranking = JSON.parse(localStorage.getItem("rankingHarmonico")) || [];
-            ranking.push({ nome: nomeJogador, pontos: pontuacao });
-            ranking.sort((a, b) => b.pontos - a.pontos);
-            ranking = ranking.slice(0, 5);
-            localStorage.setItem("rankingHarmonico", JSON.stringify(ranking));
-        } catch(e) {
-            ranking = [{ nome: nomeJogador, pontos: pontuacao }];
-        }
-
-        const tbody = document.getElementById("ranking-body");
-        tbody.innerHTML = "";
-        ranking.forEach((pos, index) => {
-            tbody.innerHTML += `<tr><td><strong>${index + 1}º</strong></td><td>${pos.nome}</td><td>${pos.pontos} pts</td></tr>`;
-        });
-
         showScreen("gameover-screen");
     }
 
