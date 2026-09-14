@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Campo Harmônico</title>
+    <style>
+        :root {
+            --primary: #4a00e0;
+            --secondary: #8e2de2;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: linear-gradient(135deg, var(--primary), var(--secondary)); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: var(--dark); }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 500px; text-align: center; }
+        h1 { margin-bottom: 20px; color: var(--primary); font-size: 24px; }
+        h2 { margin-bottom: 15px; font-size: 20px; }
+        .screen { display: none; }
+        .active { display: block; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
+        .options-group { text-align: left; margin: 15px 0; background: #f0f2f5; padding: 15px; border-radius: 8px; }
+        .checkbox-container { display: block; margin-bottom: 12px; cursor: pointer; font-size: 16px; }
+        button { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; }
+        .hud { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; background: #eee; padding: 10px; border-radius: 8px; }
+        .quiz-btn { background: #f0f2f5; color: var(--dark); border: 2px solid #ddd; text-align: left; padding: 15px; margin: 10px 0; border-radius: 8px; font-size: 18px; width: 100%; cursor: pointer; }
+        .ranking-table { width: 100%; margin: 20px 0; border-collapse: collapse; text-align: left; }
+        .ranking-table th, .ranking-table td { padding: 10px; border-bottom: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="setup-screen" class="screen active">
+        <h1>🏆 Quiz Campo Harmônico</h1>
+        <input type="text" id="player-name" placeholder="Seu nome..." maxlength="15">
+        
+        <div class="options-group">
+            <p style="font-weight: bold; margin-bottom: 10px;">Escolha os Campos:</p>
+            <label class="checkbox-container">
+                <input type="checkbox" id="chk-maior" checked> Maiores (C, Dm, Em...)
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="chk-menor"> Menores (Am, Bdim, C...)
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="chk-dim"> Diminutos (Bdim, C...)
+            </label>
+        </div>
+        <button onclick="startGame()">Iniciar Jogo</button>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="hud">
+            <div>Pontos: <span id="score-display">0</span></div>
+            <div>Vidas: <span id="lives-display">XXX</span></div>
+        </div>
+        <h2 id="question-text">Carregando pergunta...</h2>
+        <div id="answers-container"></div>
+    </div>
+
+    <div id="gameover-screen" class="screen">
+        <h1 style="color: var(--danger)">Fim de Jogo!</h1>
+        <p style="font-size: 18px; margin-bottom: 15px;">Pontuação: <strong id="final-score">0</strong></p>
+        
+        <h3>🏆 TOP 5 RANKING</h3>
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>Pos</th>
+                    <th>Nome</th>
+                    <th>Pontos</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-body"></tbody>
+        </table>
+        <button onclick="restartGame()">Jogar Novamente</button>
+    </div>
+</div>
+
+<script>
+    const database = {
+        maior: [
+            { tom: "Dó Maior (C)", graus: ["C", "Dm", "Em", "F", "G", "Am", "Bdim"] },
+            { tom: "Ré Maior (D)", graus: ["D", "Em", "F#m", "G", "A", "Bm", "C#dim"] },
+            { tom: "Mi Maior (E)", graus: ["E", "F#m", "G#m", "A", "B", "C#m", "D#dim"] },
+            { tom: "Fá Maior (F)", graus: ["F", "Gm", "Am", "Bb", "C", "Dm", "Edim"] },
+            { tom: "Sol Maior (G)", graus: ["G", "Am", "Bm", "C", "D", "Em", "F#dim"] },
+            { tom: "Lá Maior (A)", graus: ["A", "Bm", "C#m", "D", "E", "F#m", "G#dim"] },
+            { tom: "Si Maior (B)", graus: ["B", "C#m", "D#m", "E", "F#", "G#m", "A#dim"] }
+        ],
+        menor: [
+            { tom: "Lá Menor (Am)", graus: ["Am", "Bdim", "C", "Dm", "Em", "F", "G"] },
+            { tom: "Mi Menor (Em)", graus: ["Em", "F#dim", "G", "Am", "Bm", "C", "D"] },
+            { tom: "Si Menor (Bm)", graus: ["Bm", "C#dim", "D", "Em", "F#m", "G", "A"] },
+            { tom: "Ré Menor (Dm)", graus: ["Dm", "Edim", "F", "Gm", "Am", "Bb", "C"] }
+        ],
+        dim: [
+            { tom: "Si Diminuto (Bdim)", graus: ["Bdim", "C", "Dm", "Em", "F", "G", "Am"] },
+            { tom: "Fá Sustenido Diminuto (F#dim)", graus: ["F#dim", "G", "Am", "Bm", "C", "D", "Em"] }
+        ]
+    };
+
+    const grausRomanos = ["I", "II", "III", "IV", "V", "VI", "VII"];
+    let poolPerguntas = [];
+    let nomeJogador = "";
+    let pontuacao = 0;
+    let vidas = 3;
+    let respostaCorretaAtual = "";
+    let travado = false;
+
+    function showScreen(screenId) {
+        document.getElementById("setup-screen").style.display = "none";
+        document.getElementById("game-screen").style.display = "none";
+        document.getElementById("gameover-screen").style.display = "none";
+        document.getElementById(screenId).style.display = "block";
+    }
+
+    function startGame() {
+        nomeJogador = document.getElementById("player-name").value.trim() || "Jogador";
+        
+        poolPerguntas = [];
+        if (document.getElementById("chk-maior").checked) poolPerguntas.push(...database.maior);
+        if (document.getElementById("chk-menor").checked) poolPerguntas.push(...database.menor);
+        if (document.getElementById("chk-dim").checked) poolPerguntas.push(...database.dim);
+
+        if (poolPerguntas.length === 0) {
+            alert("Marque ao menos uma caixa para jogar!");
+            return;
+        }
+
+        pontuacao = 0;
+        vidas = 3;
+        document.getElementById("score-display").innerText = pontuacao;
+        document.getElementById("lives-display").innerText = "X ".repeat(vidas);
+        showScreen("game-screen");
+        proximaPergunta();
+    }
+
+    function proximaPergunta() {
+        travado = false;
+        const tomSorteado = poolPerguntas[Math.floor(Math.random() * poolPerguntas.length)];
+        const indiceGrau = Math.floor(Math.random() * 7);
+        
+        respostaCorretaAtual = tomSorteado.graus[indiceGrau];
+        document.getElementById("question-text").innerText = `No tom de ${tomSorteado.tom}, qual é o ${grausRomanos[indiceGrau]} grau?`;
+
+        let alternativas = new Set([respostaCorretaAtual]);
+        let todosAcordes = ["C", "Dm", "Em", "F", "G", "Am", "Bdim", "D", "F#m", "Bm", "C#dim", "G#m", "D#dim", "Gm", "Edim", "A#dim", "Bb"];
+
+        while (alternativas.size < 4) {
+            let acordeErrado = todosAcordes[Math.floor(Math.random() * todosAcordes.length)];
+            alternativas.add(acordeErrado);
+        }
+
+        let arrAlternativas = Array.from(alternativas).sort(() => Math.random() - 0.5);
+        const container = document.getElementById("answers-container");
+        container.innerHTML = "";
+        
+        arrAlternativas.forEach(alt => {
+            const btn = document.createElement("button");
+            btn.className = "quiz-btn";
+            btn.innerText = alt;
+            btn.onclick = () => verificarResposta(btn, alt);
+            container.appendChild(btn);
+        });
+    }
+
+    function verificarResposta(botaoClicado, respostaEscolhida) {
+        if (travado) return;
+        travado = true;
+
+        if (respostaEscolhida === respostaCorretaAtual) {
+            botaoClicado.style.backgroundColor = "#2ecc71";
+            botaoClicado.style.color = "white";
+            pontuacao += 10;
+            document.getElementById("score-display").innerText = pontuacao;
+        } else {
+            botaoClicado.style.backgroundColor = "#e74c3c";
+            botaoClicado.style.color = "white";
+            vidas--;
+            document.getElementById("lives-display").innerText = "X ".repeat(vidas);
+            
+            document.querySelectorAll(".quiz-btn").forEach(b => {
+                if (b.innerText === respostaCorretaAtual) {
+                    b.style.backgroundColor = "#2ecc71";
+                    b.style.color = "white";
+                }
+            });
+        }
+
+        setTimeout(() => {
+            if (vidas <= 0) {
+                gameOver();
+            } else {
+                proximaPergunta();
+            }
+        }, 1200);
+    }
+
+    function gameOver() {
+        document.getElementById("final-score").innerText = pontuacao;
+        
+        let ranking = [];
+        try {
+            ranking = JSON.parse(localStorage.getItem("rankingHarmonico")) || [];
+            ranking.push({ nome: nomeJogador, pontos: pontuacao });
+            ranking.sort((a, b) => b.pontos - a.pontos);
+            ranking = ranking.slice(0, 5);
+            localStorage.setItem("rankingHarmonico", JSON.stringify(ranking));
+        } catch(e) {
+            ranking = [{ nome: nomeJogador, pontos: pontuacao }];
+        }
+
+        const tbody = document.getElementById("ranking-body");
+        tbody.innerHTML = "";
+        ranking.forEach((pos, index) => {
+            tbody.innerHTML += `<tr><td><strong>${index + 1}º</strong></td><td>${pos.nome}</td><td>${pos.pontos} pts</td></tr>`;
+        });
+
+        showScreen("gameover-screen");
+    }
+
+    function restartGame() {
+        showScreen("setup-screen");
+    }
+</script>
+</body>
+</html>
