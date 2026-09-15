@@ -1,824 +1,896 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Do Zero ao Campo Harmônico - Guia Definitivo e Jogo</title>
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #10b981;
-            --border: #334155;
-            --highlight: #38bdf8;
-            --danger: #f43f5e;
-            --warning: #f59e0b;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harmonia Pro - Masterclass Do Zero ao Campo Harmônico</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#0f1015',
+            panelBg: '#181b22',
+            panelBorder: '#272a35',
+            primary: '#04d361',
+            primaryHover: '#00b350',
+            secondary: '#8257e5',
+            secondaryHover: '#6a43c7',
+            accent: '#fba100',
+            textMain: '#e1e1e6',
+            textMuted: '#9494a0',
+            danger: '#f75a68'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
         }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f1015;
+      color: #e1e1e6;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0f1015; }
+    ::-webkit-scrollbar-thumb { background: #272a35; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3c4051; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+    .view-section {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .view-section.active {
+      display: block;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.7;
-            padding: 20px;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .container {
-            max-width: 1050px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            color: #818cf8;
-            margin-bottom: 8px;
-        }
-
-        header p {
-            color: var(--text-muted);
-        }
-
-        /* Menu de Abas */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border);
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .tab-btn.active, .tab-btn:hover {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .section-content {
-            display: none;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-
-        .section-content.active {
-            display: block;
-        }
-
-        /* Configurações Globais */
-        .config-box {
-            background: rgba(15, 23, 42, 0.6);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
-
-        .config-box h3 {
-            font-size: 1.05rem;
-            margin-bottom: 8px;
-            color: var(--highlight);
-        }
-
-        .checkbox-group {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .checkbox-group label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
-        }
-
-        /* Tipografia de Teoria Aprofundada */
-        h2 {
-            color: var(--highlight);
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        h3 {
-            color: #818cf8;
-            margin: 30px 0 12px 0;
-            font-size: 1.25rem;
-            border-left: 4px solid var(--primary);
-            padding-left: 10px;
-        }
-
-        p {
-            margin-bottom: 14px;
-            color: var(--text-muted);
-        }
-
-        strong {
-            color: var(--text-color);
-        }
-
-        .theory-box {
-            background: rgba(15, 23, 42, 0.6);
-            border-left: 3px solid var(--accent);
-            padding: 18px;
-            margin: 18px 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .theory-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background-color: #0f172a;
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 0.95rem;
-        }
-
-        .theory-table th, .theory-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .theory-table th {
-            background-color: #1e293b;
-            color: var(--highlight);
-        }
-
-        .theory-table tr:hover {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        /* Seletor e Campo Harmônico Prático */
-        .controls-row {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        select {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border);
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .chords-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .chord-card {
-            background-color: var(--bg-color);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .chord-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary);
-        }
-
-        .chord-degree {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 5px;
-        }
-
-        .chord-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 5px;
-        }
-
-        .chord-notes {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* Piano Interativo */
-        .piano-container {
-            display: flex;
-            justify-content: center;
-            background: #0f172a;
-            padding: 20px;
-            border-radius: 8px;
-            position: relative;
-            margin-top: 20px;
-            overflow-x: auto;
-        }
-
-        .piano-keys {
-            display: flex;
-            position: relative;
-            height: 180px;
-        }
-
-        .key {
-            position: relative;
-            cursor: pointer;
-            border-radius: 0 0 5px 5px;
-            transition: background 0.1s;
-        }
-
-        .key.white {
-            width: 45px;
-            height: 180px;
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            z-index: 1;
-        }
-
-        .key.white:hover, .key.white.active {
-            background: #e2e8f0;
-        }
-
-        .key.black {
-            width: 30px;
-            height: 110px;
-            background: #1e293b;
-            border: 1px solid #000;
-            position: absolute;
-            z-index: 2;
-            border-radius: 0 0 4px 4px;
-        }
-
-        .key.black:hover, .key.black.active {
-            background: #334155;
-        }
-
-        .key-label {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-        }
-
-        .white .key-label { color: #0f172a; }
-        .black .key-label { color: #f8fafc; bottom: 8px; }
-
-        /* Estilização do Quiz estilo Jogo */
-        .game-hud {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(15, 23, 42, 0.7);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            font-weight: bold;
-        }
-
-        .hud-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .quiz-box {
-            text-align: center;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .quiz-question {
-            font-size: 1.25rem;
-            margin-bottom: 25px;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        .quiz-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .quiz-btn {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border);
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .quiz-btn:hover {
-            border-color: var(--primary);
-            background-color: rgba(79, 70, 229, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .quiz-btn.correct {
-            background-color: var(--accent) !important;
-            color: #0f172a !important;
-            border-color: var(--accent) !important;
-        }
-
-        .quiz-btn.wrong {
-            background-color: var(--danger) !important;
-            color: #fff !important;
-            border-color: var(--danger) !important;
-        }
-
-        .quiz-feedback {
-            font-weight: bold;
-            font-size: 1.15rem;
-            min-height: 40px;
-            margin-bottom: 15px;
-        }
-    </style>
+    .custom-checkbox input:checked + div {
+      background-color: #04d361;
+      border-color: #04d361;
+    }
+    .custom-checkbox input:checked + div svg {
+      display: block;
+    }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center p-3 sm:p-6 md:p-8">
 
-<div class="container">
-    <header>
-        <h1>🎵 Do Zero ao Campo Harmônico</h1>
-        <p>Curso teórica aprofundado e Arena de Desafios Interativa</p>
-    </header>
-
-    <!-- Menu Global de Configuração -->
-    <div class="config-box">
-        <h3>⚙️ Filtros de Dificuldade (Iniciante por Padrão)</h3>
-        <div class="checkbox-group">
-            <label>
-                <input type="checkbox" id="chkNaturais" checked onchange="atualizarAplicacao()"> Somente Tons Naturais (Sem # ou b)
-            </label>
-            <label>
-                <input type="checkbox" id="chkSetona" checked onchange="atualizarAplicacao()"> Sem a 7ª (Usar apenas Tríades - 3 notas)
-            </label>
-        </div>
+  <header class="w-full max-w-6xl flex justify-between items-center mb-6 bg-panelBg p-4 rounded-2xl border border-panelBorder shadow-xl">
+    <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('hub')">
+      <div class="bg-primary/20 p-2.5 rounded-xl text-primary text-2xl font-bold">🎹</div>
+      <div>
+        <h1 class="text-lg sm:text-xl font-extrabold text-white">Harmonia <span class="text-primary">Pro Master</span></h1>
+        <p class="text-[10px] sm:text-xs text-textMuted uppercase tracking-widest font-semibold">Do Zero ao Campo Harmônico Completo</p>
+      </div>
     </div>
-
-    <!-- Navegação por Abas -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="mudarAba('teoria')">📖 Teoria Completa do Zero</button>
-        <button class="tab-btn" onclick="mudarAba('campo')">🎼 Campo Harmônico</button>
-        <button class="tab-btn" onclick="mudarAba('piano')">🎹 Laboratório de Piano</button>
-        <button class="tab-btn" onclick="mudarAba('quiz')">🎮 Arena Desafio (Quiz)</button>
+    <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
+      <button onclick="switchView('hub')" class="text-xs sm:text-sm bg-panelBorder/50 hover:bg-panelBorder text-textMain px-3 py-2 rounded-lg font-semibold transition-all">
+        🏠 Início
+      </button>
+      <button onclick="switchView('guide')" class="text-xs sm:text-sm bg-panelBorder/50 hover:bg-panelBorder text-textMain px-3 py-2 rounded-lg font-semibold transition-all">
+        📚 Guia Do Zero
+      </button>
+      <button onclick="switchView('builder')" class="text-xs sm:text-sm bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/30 px-3 py-2 rounded-lg font-semibold transition-all">
+        🛠️ Construtor
+      </button>
+      <button onclick="switchView('quizcfg')" class="text-xs sm:text-sm bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-3 py-2 rounded-lg font-semibold transition-all">
+        🎮 Quiz por Níveis
+      </button>
     </div>
+  </header>
 
-    <!-- ABA 1: TEORIA APROFUNDADA -->
-    <div id="teoria" class="section-content active">
-        <h2>Manual Definitivo: Da Música ao Campo Harmônico</h2>
-        <p>Se você nunca viu teoria na vida, este é o seu mapa definitivo. Vamos do átomo da música (as notas) até a superestrutura do Campo Harmônico.</p>
+  <main class="w-full max-w-6xl flex-1 flex flex-col">
 
-        <h3>Módulo 1: O Alfabeto Musical e as Distâncias (Tons e Semitons)</h3>
-        <p>Na música ocidental, possuímos 12 notas cromáticas divididas em 7 notas naturais e 5 notas alteradas (sustenidos <strong>#</strong> e bemóis <strong>b</strong>). A menor distância possível entre duas teclas vizinhas no piano (ex: de uma tecla branca para uma preta colada) chama-se <strong>Semitom</strong> (meio tom). Dois semitons formam um <strong>Tom</strong>.</p>
-        <div class="theory-box">
-            <strong>As 7 Notas Naturais e suas Letras (Cifra):</strong><br>
-            C (Dó) — D (Ré) — E (Mi) — F (Fá) — G (Sol) — A (Lá) — B (Si)
+    <section id="view-hub" class="view-section active w-full">
+      <div class="text-center max-w-2xl mx-auto mb-10 mt-4">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-3">Domine a Harmonia Musical</h2>
+        <p class="text-textMuted text-sm sm:text-base">Explore escalas maiores completas, monte acordes complexos com 7ª e 9ª, estude o campo harmônico avançado e teste seus conhecimentos em quizzes interativos.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- Card 1 -->
+        <div onclick="switchView('guide')" class="bg-panelBg hover:border-secondary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+          <div class="text-3xl mb-4 bg-secondary/10 w-12 h-12 rounded-xl flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">📚</div>
+          <h3 class="text-lg font-bold text-white mb-2">Guia Do Zero & Escalas</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Aprenda desde o básico (notas, tons e semitons) até a tabela completa de todas as 12 tonalidades de escalas maiores com armadura de clave.</p>
+          <span class="text-xs text-secondary font-bold group-hover:underline">Acessar Guia →</span>
         </div>
 
-        <h3>Módulo 2: A Receita da Escala Maior (A Fórmula Secreta)</h3>
-        <p>Uma escala maior não é aleatória: ela obedece rigorosamente a uma sequência fixa de passos (Tons - T) e meios-passos (Semitons - S):</p>
-        <p><code>[Tom] - [Tom] - [Semitom] - [Tom] - [Tom] - [Tom] - [Semitom]</code></p>
-        <p>Aplicando essa fórmula na nota <strong>Dó (C)</strong>, passamos apenas pelas teclas brancas do piano, gerando a escala padrão:</p>
-        <div class="theory-box">
-            <strong>Escala de Dó Maior:</strong> Dó (C) → Ré (D) → Mi (E) → Fá (F) → Sol (G) → Lá (A) → Si (B)
+        <!-- Card 2 -->
+        <div onclick="switchView('builder')" class="bg-panelBg hover:border-accent/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+          <div class="text-3xl mb-4 bg-accent/10 w-12 h-12 rounded-xl flex items-center justify-center text-accent group-hover:scale-110 transition-transform">🛠️</div>
+          <h3 class="text-lg font-bold text-white mb-2">Construtor & Campo Harmônico</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Construa tríades, tétrades (com 7ª menor, 7ª maior, Min-Maj7) e extensões de 9ª. Visualize o campo harmônico estendido e piano interativo.</p>
+          <span class="text-xs text-accent font-bold group-hover:underline">Abrir Construtor →</span>
         </div>
 
-        <h3>Módulo 3: Anatomia de um Acorde (Tríades)</h3>
-        <p>Um acorde nasce quando empilhamos notas em intervalos de terças (pulando uma nota da escala e pegando a seguinte). O acorde básico de 3 notas chama-se <strong>Tríade</strong>:</p>
-        <ul>
-            <li><strong>Fundamental (1ª):</strong> A base que dá nome ao acorde.</li>
-            <li><strong>Terça (3ª):</strong> Determina se o acorde é <strong>Maior</strong> (claro/alegre) ou <strong>Menor</strong> (escuro/triste).</li>
-            <li><strong>Quinta (5ª):</strong> Traz consistência e peso estrutural.</li>
-        </ul>
-        <p><em>Exemplo com o acorde de Dó Maior (C):</em> Pegamos a fundamental <strong>Dó</strong>, pulamos o Ré e pegamos o <strong>Mi</strong> (3ª), depois pulamos o Fá e pegamos o <strong>Sol</strong> (5ª). Notas finais: **Dó - Mi - Sol**.</p>
+        <!-- Card 3 -->
+        <div onclick="switchView('quizcfg')" class="bg-panelBg hover:border-primary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+          <div class="text-3xl mb-4 bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">🎮</div>
+          <h3 class="text-lg font-bold text-white mb-2">Quiz por Níveis & Ranking</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Desafie-se em 3 níveis de dificuldade (Iniciante, Intermediário, Avançado) com perguntas sobre graus, acordes com 7ª/9ª e intervalos.</p>
+          <span class="text-xs text-primary font-bold group-hover:underline">Jogar Agora →</span>
+        </div>
+      </div>
+    </section>
 
-        <h3>Módulo 4: O Campo Harmônico (A Família Musical)</h3>
-        <p>Quando aplicamos a formação de tríades em cima de <strong>cada nota</strong> de uma escala maior, obtemos um conjunto perfeito de acordes que conversam entre si. Em toda escala maior natural, a ordem de qualidades (Maiores, Menores e Diminutos) é imutável:</p>
+    <section id="view-guide" class="view-section w-full">
+      <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder mb-8 shadow-2xl">
+        <div class="flex justify-between items-center mb-6 border-b border-panelBorder pb-4">
+          <div>
+            <span class="text-xs uppercase font-bold text-secondary tracking-widest block mb-1">Módulo Teórico</span>
+            <h2 class="text-2xl font-extrabold text-white">Do Zero à Estrutura das Escalas Maiores</h2>
+          </div>
+          <button onclick="switchView('builder')" class="hidden sm:block text-xs bg-secondary hover:bg-secondaryHover text-white px-4 py-2 rounded-lg font-semibold transition-all">
+            Ir para Construtor 🛠️
+          </button>
+        </div>
 
-        <table class="theory-table">
+        <!-- Step 1 to 4 Accordion / Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-sm text-textMuted">
+          <div class="bg-appBg p-5 rounded-xl border border-panelBorder">
+            <h3 class="text-white font-bold text-base mb-2 flex items-center gap-2"><span class="text-primary">1.</span> O que são Notas e Tons?</h3>
+            <p>O universo musical ocidental é composto por 12 notas cromáticas: <code class="text-primary">C, C#, D, D#, E, F, F#, G, G#, A, A#, B</code>. A menor distância entre duas notas adjacentes é o <b>Semiton</b>. Dois semitons formam um <b>Tom</b>.</p>
+          </div>
+          <div class="bg-appBg p-5 rounded-xl border border-panelBorder">
+            <h3 class="text-white font-bold text-base mb-2 flex items-center gap-2"><span class="text-primary">2.</span> A Fórmula da Escala Maior</h3>
+            <p>A escala maior é a fundação da harmonia ocidental. Sua fórmula interválica a partir da tônica é sempre: <br><code class="bg-panelBorder px-2 py-0.5 rounded text-white font-bold mt-1 inline-block">T - T - S - T - T - T - S</code> (Tom, Tom, Semitom, Tom, Tom, Tom, Semitom).</p>
+          </div>
+        </div>
+
+        <!-- Master Table of 12 Major Scales -->
+        <h3 class="text-lg font-bold text-white mb-3">Tabela Completa de Todas as 12 Escalas Maiores</h3>
+        <p class="text-xs text-textMuted mb-4">Veja as notas constituintes de cada tonalidade maior natural ou com acidentes:</p>
+        
+        <div class="overflow-x-auto mb-8">
+          <table class="w-full text-left text-xs sm:text-sm border-collapse">
             <thead>
-                <tr>
-                    <th>Grau</th>
-                    <th>Função Teórica</th>
-                    <th>Qualidade</th>
-                    <th>Exemplo em Dó Maior</th>
-                    <th>Notas Formadoras</th>
-                </tr>
+              <tr class="border-b border-panelBorder text-primary bg-appBg">
+                <th class="p-3">Tonalidade (Raiz)</th>
+                <th class="p-3">Notas da Escala Maior</th>
+                <th class="p-3">Acidentes (Sust. / Bemóis)</th>
+              </tr>
             </thead>
-            <tbody>
-                <tr><td><strong>I</strong></td><td>Tônica (A Casa / Repouso)</td><td>Maior</td><td>C</td><td>Dó - Mi - Sol</td></tr>
-                <tr><td><strong>II</strong></td><td>Supertônica</td><td>Menor</td><td>Dm</td><td>Ré - Fá - Lá</td></tr>
-                <tr><td><strong>III</strong></td><td>Mediante</td><td>Menor</td><td>Em</td><td>Mi - Sol - Si</td></tr>
-                <tr><td><strong>IV</strong></td><td>Subdominante (Afastamento)</td><td>Maior</td><td>F</td><td>Fá - Lá - Dó</td></tr>
-                <tr><td><strong>V</strong></td><td>Dominante (Tensão Máxima)</td><td>Maior</td><td>G</td><td>Sol - Si - Ré</td></tr>
-                <tr><td><strong>VI</strong></td><td>Relativa Menor</td><td>Menor</td><td>Am</td><td>Lá - Dó - Mi</td></tr>
-                <tr><td><strong>VII</strong></td><td>Sensível (Instabilidade)</td><td>Diminuto</td><td>Bdim</td><td>Si - Ré - Fá</td></tr>
+            <tbody id="scales-table-body" class="text-textMain">
+              <!-- Populated by JS -->
             </tbody>
-        </table>
-    </div>
-
-    <!-- ABA 2: CAMPO HARMÔNICO PRÁTICO -->
-    <div id="campo" class="section-content">
-        <h2>Gerador Interativo de Campo Harmônico</h2>
-        <div class="controls-row">
-            <label for="selectTonic"><strong>Escolha a Tônica (Tom Principal):</strong></label>
-            <select id="selectTonic" onchange="gerarCampoHarmonico()"></select>
+          </table>
         </div>
-        <p>Clique em qualquer acorde abaixo para visualizar suas notas detalhadas e ouvi-lo instantaneamente no piano:</p>
-        <div id="gridChords" class="chords-grid"></div>
-    </div>
 
-    <!-- ABA 3: PIANO -->
-    <div id="piano" class="section-content">
-        <h2>Laboratório de Piano</h2>
-        <p>Clique nas teclas para tocar notas avulsas ou selecione acordes no Campo Harmônico para ver sua montagem visual.</p>
-        <div class="piano-container">
-            <div class="piano-keys" id="pianoKeys"></div>
+        <div class="bg-secondary/10 p-5 rounded-xl border border-secondary/30">
+          <h4 class="text-white font-bold mb-2 flex items-center gap-2"><span>💡</span> Regra de Ouro do Campo Harmônico Maior</h4>
+          <p class="text-xs text-textMuted leading-relaxed">
+            Quando harmonizamos a escala maior em tétrades (acordes de 4 notas incluindo a 7ª), obtemos uma ordem imutável de qualidades de acordes para qualquer tom maior:
+            <br><b>I (Maj7) • ii (m7) • iii (m7) • IV (Maj7) • V (7) • vi (m7) • vii° (m7b5 / meio-diminuto)</b>.
+          </p>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <!-- ABA 4: QUIZ (MODO JOGO) -->
-    <div id="quiz" class="section-content">
-        <div class="quiz-box">
-            <div class="game-hud">
-                <div class="hud-item">🏆 Pontos: <span id="txtPontos" style="color:var(--accent);">0</span></div>
-                <div class="hud-item">❤️ Vidas: <span id="txtVidas" style="color:var(--danger);">❤️❤️❤️</span></div>
-                <div class="hud-item">🔥 Nível: <span id="txtNivel" style="color:var(--warning);">1</span></div>
+    <section id="view-builder" class="view-section w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- Controls Column -->
+        <div class="lg:col-span-1 space-y-6">
+          <div class="bg-panelBg p-6 rounded-2xl border border-panelBorder shadow-2xl">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span class="text-accent">🛠️</span> Construtor de Acordes
+            </h2>
+            <p class="text-xs text-textMuted mb-6">Selecione uma nota raiz e a extensão desejada para construir o acorde e ver sua fórmula e notas detalhadas.</p>
+
+            <div class="space-y-4 mb-6">
+              <div>
+                <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Nota Raiz (Tônica)</label>
+                <select id="builder-root" onchange="updateChordBuilder()" class="w-full bg-appBg text-white border border-panelBorder rounded-lg px-3 py-2.5 outline-none focus:border-accent text-sm font-semibold">
+                  <option value="0">C (Dó)</option>
+                  <option value="1">C# / Db</option>
+                  <option value="2">D (Ré)</option>
+                  <option value="3">D# / Eb</option>
+                  <option value="4">E (Mi)</option>
+                  <option value="5">F (Fá)</option>
+                  <option value="6">F# / Gb</option>
+                  <option value="7">G (Sol)</option>
+                  <option value="8">G# / Ab</option>
+                  <option value="9">A (Lá)</option>
+                  <option value="10">A# / Bb</option>
+                  <option value="11">B (Si)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Tipo de Acorde / Qualidade</label>
+                <select id="builder-type" onchange="updateChordBuilder()" class="w-full bg-appBg text-white border border-panelBorder rounded-lg px-3 py-2.5 outline-none focus:border-accent text-sm font-semibold">
+                  <option value="maj">Tríade Maior (1, 3, 5)</option>
+                  <option value="min">Tríade Menor (1, b3, 5)</option>
+                  <option value="dim">Tríade Diminuta (1, b3, b5)</option>
+                  <option value="aug">Tríade Aumentada (1, 3, #5)</option>
+                  <option value="maj7">Com 7ª Maior - Maj7 (1, 3, 5, 7)</option>
+                  <option value="m7">Menor com 7ª Menor - m7 (1, b3, 5, b7)</option>
+                  <option value="7">Com 7ª Menor / Dominante - 7 (1, 3, 5, b7)</option>
+                  <option value="mMaj7">Menor com 7ª Maior - m(Maj7) (1, b3, 5, 7)</option>
+                  <option value="m7b5">Meio Diminuto - m7(b5) (1, b3, b5, b7)</option>
+                  <option value="maj9">Com 9ª Maior - Maj9 (1, 3, 5, 7, 9)</option>
+                  <option value="m9">Menor com 9ª - m9 (1, b3, 5, b7, 9)</option>
+                  <option value="9">Dominante com 9ª - 9 (1, 3, 5, b7, 9)</option>
+                </select>
+              </div>
             </div>
 
-            <div class="quiz-question" id="quizQuestion">Carregando desafio...</div>
-            <div class="quiz-options" id="quizOptions"></div>
-            <div class="quiz-feedback" id="quizFeedback"></div>
-            <button id="btnProxima" class="tab-btn" style="display:none; margin: 0 auto;" onclick="proximaFaseJogo()">Avançar para Próxima Fase 🚀</button>
+            <div id="chord-output-card" class="bg-appBg p-4 rounded-xl border border-panelBorder text-center">
+              <span class="text-[10px] text-textMuted uppercase tracking-wider block mb-1">Acorde Gerado</span>
+              <div id="out-chord-name" class="text-2xl font-extrabold text-accent mb-2">Cmaj7</div>
+              <div id="out-chord-notes" class="text-xs text-textMain mb-1">Notas: C - E - G - B</div>
+              <div id="out-chord-formula" class="text-[11px] text-textMuted">Fórmula: 1 - 3 - 5 - 7</div>
+            </div>
+          </div>
         </div>
-    </div>
-</div>
 
-<script>
-    const notasNaturais = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-    const todasAsNotas = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const intervalosMaior = [0, 2, 4, 5, 7, 9, 11];
-    const qualidadesTriades = ['', 'm', 'm', '', '', 'm', 'dim'];
+        <!-- Harmonic Field Generator & Table Column -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-panelBg p-6 rounded-2xl border border-panelBorder shadow-2xl">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+              <div>
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                  <span class="text-primary">🎹</span> Campo Harmônico Completo (Tétrades & 9ª)
+                </h2>
+                <p class="text-xs text-textMuted mt-1">Selecione uma tonalidade para gerar o campo harmônico completo com sétima e nona.</p>
+              </div>
+              <select id="hf-root" onchange="updateHarmonicField()" class="bg-appBg text-white border border-panelBorder rounded-lg px-3 py-2 outline-none focus:border-primary text-sm font-semibold">
+                <option value="0">C Maior</option>
+                <option value="1">C# / Db Maior</option>
+                <option value="2">D Maior</option>
+                <option value="3">D# / Eb Maior</option>
+                <option value="4">E Maior</option>
+                <option value="5">F Maior</option>
+                <option value="6">F# / Gb Maior</option>
+                <option value="7" selected>G Maior</option>
+                <option value="8">G# / Ab Maior</option>
+                <option value="9">A Maior</option>
+                <option value="10">A# / Bb Maior</option>
+                <option value="11">B Maior</option>
+              </select>
+            </div>
 
-    let pontuacaoJogo = 0;
-    let vidasJogo = 3;
-    let nivelJogo = 1;
+            <div class="overflow-x-auto mb-6">
+              <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                <thead>
+                  <tr class="border-b border-panelBorder text-primary bg-appBg">
+                    <th class="p-3">Grau</th>
+                    <th class="p-3">Acorde (Tétrade)</th>
+                    <th class="p-3">Extensão 9ª</th>
+                    <th class="p-3">Notas do Acorde</th>
+                  </tr>
+                </thead>
+                <tbody id="hf-table-body" class="text-textMain">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
 
-    function mudarAba(abaId) {
-        document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(abaId).classList.add('active');
-        event.currentTarget.classList.add('active');
-        
-        if(abaId === 'piano' && pianoKeys.children.length === 0) {
-            construirPiano();
-        }
-        if(abaId === 'quiz' && vidasJogo <= 0) {
-            reiniciarJogo();
-        }
+            <!-- Interactive Piano Keyboard -->
+            <div class="bg-appBg p-5 rounded-2xl border border-panelBorder">
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                  <span>🎹</span> Teclado de Visualização do Acorde
+                </h3>
+                <span id="piano-active-note-label" class="text-xs text-primary font-semibold">Clique em um acorde acima para destacar no piano</span>
+              </div>
+              <div class="overflow-x-auto pb-2 pt-1 flex justify-center">
+                <div id="piano-container" class="relative flex h-36 bg-panelBg p-2 rounded-xl border border-panelBorder">
+                  <!-- Piano keys injected by JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="view-quizcfg" class="view-section w-full max-w-2xl mx-auto mt-2">
+      <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder shadow-2xl">
+        <h2 class="text-2xl font-bold text-white mb-2 text-center">Quiz por Níveis de Dificuldade</h2>
+        <p class="text-textMuted text-sm text-center mb-8">Escolha o nível de complexidade para testar seus conhecimentos em harmonia e construção de acordes.</p>
+
+        <div class="space-y-4 mb-8">
+          <!-- Level Selection Cards -->
+          <label class="flex items-center justify-between p-4 rounded-xl border border-panelBorder bg-appBg cursor-pointer hover:border-primary/50 transition-colors">
+            <div class="flex items-center gap-3">
+              <input type="radio" name="quiz-level" value="1" checked class="accent-primary w-4 h-4">
+              <div>
+                <span class="text-white font-bold text-sm block">Nível 1: Iniciante (Tríades & Graus Básicos)</span>
+                <span class="text-textMuted text-xs">Foco em graus maiores, menores e tríades básicas.</span>
+              </div>
+            </div>
+            <span class="text-xs bg-primary/20 text-primary px-2.5 py-1 rounded-full font-bold">Fácil</span>
+          </label>
+
+          <label class="flex items-center justify-between p-4 rounded-xl border border-panelBorder bg-appBg cursor-pointer hover:border-secondary/50 transition-colors">
+            <div class="flex items-center gap-3">
+              <input type="radio" name="quiz-level" value="2" class="accent-secondary w-4 h-4">
+              <div>
+                <span class="text-white font-bold text-sm block">Nível 2: Intermediário (Tétrades & 7ª)</span>
+                <span class="text-textMuted text-xs">Inclui acordes com 7ª maior (Maj7), menor (m7) e dominante (7).</span>
+              </div>
+            </div>
+            <span class="text-xs bg-secondary/20 text-secondary px-2.5 py-1 rounded-full font-bold">Médio</span>
+          </label>
+
+          <label class="flex items-center justify-between p-4 rounded-xl border border-panelBorder bg-appBg cursor-pointer hover:border-accent/50 transition-colors">
+            <div class="flex items-center gap-3">
+              <input type="radio" name="quiz-level" value="3" class="accent-accent w-4 h-4">
+              <div>
+                <span class="text-white font-bold text-sm block">Nível 3: Avançado (Min-Maj7, Diminutos & 9ª)</span>
+                <span class="text-textMuted text-xs">Acordes complexos, m(Maj7), m7(b5), extensões de 9ª e intervalos.</span>
+              </div>
+            </div>
+            <span class="text-xs bg-accent/20 text-accent px-2.5 py-1 rounded-full font-bold">Avançado</span>
+          </label>
+        </div>
+
+        <button onclick="startQuiz()" class="w-full bg-primary hover:bg-primaryHover text-appBg font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(4,211,97,0.3)] flex items-center justify-center gap-2">
+          <span>Iniciar Desafio 🚀</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Quiz Active View -->
+    <section id="view-quiz" class="view-section w-full max-w-3xl mx-auto mt-2">
+      <div class="bg-panelBg rounded-2xl border border-panelBorder overflow-hidden shadow-2xl">
+        <div class="bg-appBg p-4 sm:p-6 border-b border-panelBorder flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-bold text-secondary" id="ui-quiz-level-badge">Nível 1</span>
+            <span class="text-2xl" id="ui-lives">❤️❤️❤️</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-textMuted uppercase font-bold tracking-widest block">Pontuação</span>
+            <span class="text-2xl font-extrabold text-primary" id="ui-score">0</span>
+          </div>
+        </div>
+
+        <div class="w-full h-1.5 bg-panelBorder">
+          <div id="timer-bar" class="h-full bg-primary w-full"></div>
+        </div>
+
+        <div class="p-6 sm:p-10 text-center">
+          <span class="inline-block px-3 py-1 rounded-full bg-secondary/20 text-secondary text-xs font-bold uppercase tracking-wider mb-4" id="ui-question-type">Pergunta</span>
+          
+          <h3 class="text-lg sm:text-xl text-textMuted mb-2" id="ui-question-instruction">Qual é o acorde correspondente ao:</h3>
+          <div class="text-3xl sm:text-5xl font-extrabold text-white mb-2" id="ui-target-degree">Grau IV</div>
+          <p class="text-lg sm:text-xl text-textMuted mb-10">na tonalidade de <strong class="text-white text-2xl sm:text-3xl bg-panelBorder px-4 py-1 rounded-lg ml-2" id="ui-target-key">C Maior</strong></p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="quiz-options">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Game Over View -->
+    <section id="view-gameover" class="view-section w-full max-w-2xl mx-auto mt-4">
+      <div class="bg-panelBg p-8 rounded-2xl border border-panelBorder shadow-2xl text-center">
+        <div class="text-6xl mb-4">🏆</div>
+        <h2 class="text-3xl font-extrabold text-white mb-2">Fim de Jogo!</h2>
+        <p class="text-textMuted mb-6">Sua pontuação final:</p>
+        <div class="text-6xl font-black text-primary mb-8" id="ui-final-score">0</div>
+
+        <div class="max-w-sm mx-auto bg-appBg p-6 rounded-xl border border-panelBorder mb-8">
+          <h3 class="text-sm font-bold text-white mb-3 text-left">Salvar no Ranking</h3>
+          <input type="text" id="player-name" placeholder="Seu nome ou apelido" maxlength="15" class="w-full bg-panelBg text-white border border-panelBorder px-4 py-3 rounded-lg outline-none focus:border-primary mb-3 text-sm">
+          <button onclick="saveScore()" class="w-full bg-primary hover:bg-primaryHover text-appBg font-bold py-3 rounded-lg transition-all text-sm">
+            Gravar Pontuação
+          </button>
+        </div>
+
+        <div class="text-left max-w-sm mx-auto">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex justify-between items-center">
+            <span>Top 10 Jogadores</span>
+            <button onclick="clearScores()" class="text-[10px] text-danger hover:underline">Limpar</button>
+          </h3>
+          <div id="high-scores-list" class="space-y-2">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <button onclick="switchView('hub')" class="mt-8 text-sm text-textMuted hover:text-white underline transition-colors">
+          Voltar ao Início
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- MUSIC THEORY CORE DATA & ENGINE ---
+    const notesArr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const notesFlatMap = { "C#": "Db", "D#": "Eb", "F#": "Gb", "G#": "Ab", "A#": "Bb" };
+    const useFlatsTones = ["F", "A#", "D#", "G#", "C#"];
+
+    function getNoteString(idx, rootNoteStr) {
+      const sharpNote = notesArr[idx % 12];
+      if (useFlatsTones.includes(rootNoteStr) && notesFlatMap[sharpNote]) {
+        return notesFlatMap[sharpNote];
+      }
+      return sharpNote;
     }
 
-    function atualizarAplicacao() {
-        popularSelectTonicas();
-        gerarCampoHarmonico();
+    // 12 Major Scales definition with their exact notes
+    const majorScalesData = [
+      { root: "C", notes: ["C", "D", "E", "F", "G", "A", "B"], accidentals: "Nenhuma (Tons Naturais)" },
+      { root: "C# / Db", notes: ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"], accidentals: "5 Bemóis (Db)" },
+      { root: "D", notes: ["D", "E", "F#", "G", "A", "B", "C#"], accidentals: "2 Sustenidos (F#, C#)" },
+      { root: "D# / Eb", notes: ["Eb", "F", "G", "Ab", "Bb", "C", "D"], accidentals: "3 Bemóis (Bb, Eb, Ab)" },
+      { root: "E", notes: ["E", "F#", "G#", "A", "B", "C#", "D#"], accidentals: "4 Sustenidos (F#, C#, G#, D#)" },
+      { root: "F", notes: ["F", "G", "A", "Bb", "C", "D", "E"], accidentals: "1 Bemol (Bb)" },
+      { root: "F# / Gb", notes: ["F#", "G#", "A#", "B", "C#", "D#", "F"], accidentals: "6 Sustenidos / 6 Bemóis" },
+      { root: "G", notes: ["G", "A", "B", "C", "D", "E", "F#"], accidentals: "1 Sustenido (F#)" },
+      { root: "G# / Ab", notes: ["Ab", "Bb", "C", "Db", "Eb", "F", "G"], accidentals: "4 Bemóis (Bb, Eb, Ab, Db)" },
+      { root: "A", notes: ["A", "B", "C#", "D", "E", "F#", "G#"], accidentals: "3 Sustenidos (F#, C#, G#)" },
+      { root: "A# / Bb", notes: ["Bb", "C", "D", "Eb", "F", "G", "A"], accidentals: "2 Bemóis (Bb, Eb)" },
+      { root: "B", notes: ["B", "C#", "D#", "E", "F#", "G#", "A#"], accidentals: "5 Sustenidos" }
+    ];
+
+    // Navigation
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      window.scrollTo(0, 0);
+
+      if (viewId === 'guide') {
+        populateScalesTable();
+      } else if (viewId === 'builder') {
+        updateChordBuilder();
+        updateHarmonicField();
+      } else if (viewId === 'hub') {
+        loadHighScores();
+      }
     }
 
-    function popularSelectTonicas() {
-        const apenasNaturais = document.getElementById('chkNaturais').checked;
-        const select = document.getElementById('selectTonic');
-        const valorAtual = select.value;
-        select.innerHTML = '';
-        
-        const lista = apenasNaturais ? notasNaturais : todasAsNotas;
-        lista.forEach(nota => {
-            const opt = document.createElement('option');
-            opt.value = nota;
-            opt.textContent = nota;
-            select.appendChild(opt);
-        });
-
-        if (lista.includes(valorAtual)) select.value = valorAtual;
+    // Populate Scales Table in Guide
+    function populateScalesTable() {
+      const tbody = document.getElementById('scales-table-body');
+      tbody.innerHTML = '';
+      majorScalesData.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-panelBorder/50 hover:bg-panelBorder/30";
+        tr.innerHTML = `
+          <td class="p-3 font-extrabold text-white">${s.root} Maior</td>
+          <td class="p-3 font-semibold text-primary">${s.notes.join(' - ')}</td>
+          <td class="p-3 text-textMuted text-xs">${s.accidentals}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
-    function obterEscala(tonica) {
-        const apenasNaturais = document.getElementById('chkNaturais').checked;
-        const base = apenasNaturais ? notasNaturais : todasAsNotas;
-        let idx = base.indexOf(tonica);
-        let escala = [];
-        
-        if (apenasNaturais) {
-            for(let i=0; i<7; i++) {
-                escala.push(base[(idx + i) % base.length]);
-            }
-        } else {
-            let idxChrom = todasAsNotas.indexOf(tonica);
-            intervalosMaior.forEach(intervalo => {
-                escala.push(todasAsNotas[(idxChrom + intervalo) % 12]);
-            });
-        }
-        return escala;
-    }
-
-    function obterNotasAcorde(notaFundamental, qualidade) {
-        let idx = todasAsNotas.indexOf(notaFundamental);
-        let terceira = (qualidade === 'm' || qualidade === 'dim') ? 3 : 4; 
-        let quinta = (qualidade === 'dim') ? 6 : 7; 
-        let nota3 = todasAsNotas[(idx + terceira) % 12];
-        let nota5 = todasAsNotas[(idx + quinta) % 12];
-        return [notaFundamental, nota3, nota5];
-    }
-
-    function gerarCampoHarmonico() {
-        const tonica = document.getElementById('selectTonic').value;
-        const semSetona = document.getElementById('chkSetona').checked;
-        const escala = obterEscala(tonica);
-        const grid = document.getElementById('gridChords');
-        grid.innerHTML = '';
-
-        const grausRomanos = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-        const limite = semSetona ? 6 : 7;
-
-        for(let i = 0; i < limite; i++) {
-            let notaGrau = escala[i];
-            let qual = qualidadesTriades[i];
-            let nomeAcorde = notaGrau + qual;
-            let notasDoAcorde = obterNotasAcorde(notaGrau, qual);
-
-            let card = document.createElement('div');
-            card.className = 'chord-card';
-            card.innerHTML = `
-                <div class="chord-degree">${grausRomanos[i]} Grau</div>
-                <div class="chord-name">${nomeAcorde}</div>
-                <div class="chord-notes">${notasDoAcorde.join(' - ')}</div>
-            `;
-            
-            card.onclick = () => {
-                tocarAcorde(notasDoAcorde);
-                destacarTeclasPiano(notasDoAcorde);
-            };
-            grid.appendChild(card);
-        }
-    }
-
-    function tocarNota(frequencia) {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = frequencia;
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.8);
-        } catch(e) {}
-    }
-
-    const frequenciasNotas = {
-        'C': 261.63, 'C#': 277.18, 'D': 293.66, 'D#': 311.13,
-        'E': 329.63, 'F': 349.23, 'F#': 369.99, 'G': 392.00,
-        'G#': 415.30, 'A': 440.00, 'A#': 466.16, 'B': 493.88
+    // --- CHORD BUILDER ENGINE ---
+    const chordFormulas = {
+      maj: { name: 'Tríade Maior', intervals: [0, 4, 7], formula: '1 - 3 - 5', suffix: '' },
+      min: { name: 'Tríade Menor', intervals: [0, 3, 7], formula: '1 - b3 - 5', suffix: 'm' },
+      dim: { name: 'Tríade Diminuta', intervals: [0, 3, 6], formula: '1 - b3 - b5', suffix: 'dim' },
+      aug: { name: 'Tríade Aumentada', intervals: [0, 4, 8], formula: '1 - 3 - #5', suffix: 'aug' },
+      maj7: { name: 'Com 7ª Maior', intervals: [0, 4, 7, 11], formula: '1 - 3 - 5 - 7', suffix: 'Maj7' },
+      m7: { name: 'Menor com 7ª Menor', intervals: [0, 3, 7, 10], formula: '1 - b3 - 5 - b7', suffix: 'm7' },
+      7: { name: 'Dominante com 7ª', intervals: [0, 4, 7, 10], formula: '1 - 3 - 5 - b7', suffix: '7' },
+      mMaj7: { name: 'Menor com 7ª Maior (Min-Maj7)', intervals: [0, 3, 7, 11], formula: '1 - b3 - 5 - 7', suffix: 'm(Maj7)' },
+      m7b5: { name: 'Meio Diminuto', intervals: [0, 3, 6, 10], formula: '1 - b3 - b5 - b7', suffix: 'm7(b5)' },
+      maj9: { name: 'Com 9ª Maior', intervals: [0, 4, 7, 11, 14], formula: '1 - 3 - 5 - 7 - 9', suffix: 'Maj9' },
+      m9: { name: 'Menor com 9ª', intervals: [0, 3, 7, 10, 14], formula: '1 - b3 - 5 - b7 - 9', suffix: 'm9' },
+      9: { name: 'Dominante com 9ª', intervals: [0, 4, 7, 10, 14], formula: '1 - 3 - 5 - b7 - 9', suffix: '9' }
     };
 
-    function tocarAcorde(notas) {
-        notas.forEach((nota, index) => {
-            setTimeout(() => {
-                if(frequenciasNotas[nota]) tocarNota(frequenciasNotas[nota]);
-            }, index * 40);
-        });
+    function updateChordBuilder() {
+      const rootIdx = parseInt(document.getElementById('builder-root').value);
+      const chordKey = document.getElementById('builder-type').value;
+      const rootNoteStr = notesArr[rootIdx];
+      const displayRoot = getNoteString(rootIdx, rootNoteStr);
+      const formulaObj = chordFormulas[chordKey];
+
+      let chordNotes = formulaObj.intervals.map(semis => {
+        return getNoteString((rootIdx + semis) % 12, displayRoot);
+      });
+
+      document.getElementById('out-chord-name').innerText = displayRoot + formulaObj.suffix;
+      document.getElementById('out-chord-notes').innerText = `Notas: ${chordNotes.join(' - ')}`;
+      document.getElementById('out-chord-formula').innerText = `Fórmula: ${formulaObj.formula} (${formulaObj.name})`;
+
+      // Render piano highlighting these notes
+      renderPianoForNotes(formulaObj.intervals.map(semis => (rootIdx + semis) % 12), displayRoot + formulaObj.suffix);
     }
 
-    function construirPiano() {
-        const container = document.getElementById('pianoKeys');
-        container.innerHTML = '';
-        const oitava = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    // --- HARMONIC FIELD GENERATOR ---
+    const harmonicFieldDegreesMajor = [
+      { num: 'I', interval: 0, quality: 'maj7', nameSuffix: 'Maj7', ninth: '9' },
+      { num: 'ii', interval: 2, quality: 'm7', nameSuffix: 'm7', ninth: '9' },
+      { num: 'iii', interval: 4, quality: 'm7', nameSuffix: 'm7', ninth: 'b9' },
+      { num: 'IV', interval: 5, quality: 'maj7', nameSuffix: 'Maj7', ninth: '#11' },
+      { num: 'V', interval: 7, quality: '7', nameSuffix: '7', ninth: '9' },
+      { num: 'vi', interval: 9, quality: 'm7', nameSuffix: 'm7', ninth: '9' },
+      { num: 'vii°', interval: 11, quality: 'm7b5', nameSuffix: 'm7(b5)', ninth: 'b13' }
+    ];
+
+    function updateHarmonicField() {
+      const rootIdx = parseInt(document.getElementById('hf-root').value);
+      const rootNoteStr = notesArr[rootIdx];
+      const displayRoot = getNoteString(rootIdx, rootNoteStr);
+
+      const tbody = document.getElementById('hf-table-body');
+      tbody.innerHTML = '';
+
+      harmonicFieldDegreesMajor.forEach(deg => {
+        const chordRootIdx = (rootIdx + deg.interval) % 12;
+        const chordRootStr = getNoteString(chordRootIdx, displayRoot);
+        const chordFullName = chordRootStr + deg.nameSuffix;
         
-        oitava.forEach((nota) => {
-            let key = document.createElement('div');
-            key.dataset.note = nota;
-            if(nota.includes('#')) {
-                key.className = 'key black';
-                let posicoesLeft = { 'C#': 30, 'D#': 75, 'F#': 165, 'G#': 210, 'A#': 255 };
-                key.style.left = (posicoesLeft[nota] || 0) + 'px';
-            } else {
-                key.className = 'key white';
-            }
-            key.innerHTML = `<div class="key-label">${nota}</div>`;
-            key.onclick = () => {
-                tocarNota(frequenciasNotas[nota]);
-                key.classList.add('active');
-                setTimeout(() => key.classList.remove('active'), 300);
-            };
-            container.appendChild(key);
-        });
+        // Calculate notes for this chord
+        const intervals = chordFormulas[deg.quality].intervals;
+        const chordNotes = intervals.map(semis => getNoteString((chordRootIdx + semis) % 12, displayRoot));
+
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-panelBorder/50 hover:bg-panelBorder/30 cursor-pointer transition-colors";
+        tr.onclick = () => {
+          renderPianoForNotes(intervals.map(semis => (chordRootIdx + semis) % 12), chordFullName);
+        };
+        tr.innerHTML = `
+          <td class="p-3 font-bold text-secondary">${deg.num}</td>
+          <td class="p-3 font-extrabold text-white">${chordFullName}</td>
+          <td class="p-3 text-accent font-semibold">${deg.ninth}</td>
+          <td class="p-3 text-textMuted text-xs">${chordNotes.join(' - ')}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
-    function destacarTeclasPiano(notas) {
-        document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('piano').classList.add('active');
-        document.querySelectorAll('.tab-btn')[2].classList.add('active');
-        if(pianoKeys.children.length === 0) construirPiano();
+    // --- PIANO KEYBOARD RENDERER ---
+    const pianoStructure = [
+      { t: 'w', n: 'C', idx: 0 }, { t: 'b', n: 'C#', idx: 1 },
+      { t: 'w', n: 'D', idx: 2 }, { t: 'b', n: 'D#', idx: 3 },
+      { t: 'w', n: 'E', idx: 4 },
+      { t: 'w', n: 'F', idx: 5 }, { t: 'b', n: 'F#', idx: 6 },
+      { t: 'w', n: 'G', idx: 7 }, { t: 'b', n: 'G#', idx: 8 },
+      { t: 'w', n: 'A', idx: 9 }, { t: 'b', n: 'A#', idx: 10 },
+      { t: 'w', n: 'B', idx: 11 },
+      { t: 'w', n: 'C', idx: 0 }, { t: 'b', n: 'C#', idx: 1 },
+      { t: 'w', n: 'D', idx: 2 }, { t: 'b', n: 'D#', idx: 3 },
+      { t: 'w', n: 'E', idx: 4 }
+    ];
 
-        document.querySelectorAll('.key').forEach(k => {
-            if(notas.includes(k.dataset.note)) {
-                k.classList.add('active');
-                setTimeout(() => k.classList.remove('active'), 1000);
-            }
-        });
-    }
+    function renderPianoForNotes(highlightNoteIndices, chordTitle = '') {
+      const container = document.getElementById('piano-container');
+      if (!container) return;
+      container.innerHTML = '';
 
-    // SISTEMA DE JOGO (QUIZ GAMIFICADO)
-    let perguntaAtual = {};
-    function gerarPerguntaJogo() {
-        if(vidasJogo <= 0) return;
+      if (chordTitle) {
+        document.getElementById('piano-active-note-label').innerText = `Acorde: ${chordTitle}`;
+      }
 
-        const tonicasDisponiveis = ['C', 'D', 'E', 'F', 'G', 'A'];
-        const tonicaAleatoria = tonicasDisponiveis[Math.floor(Math.random() * tonicasDisponiveis.length)];
-        const escala = obterEscala(tonicaAleatoria);
+      const whiteKeyWidth = 40; 
+      let whiteCount = 0;
+
+      pianoStructure.forEach((key, i) => {
+        const isHighlighted = highlightNoteIndices.includes(key.idx);
+        const el = document.createElement('div');
         
-        const tipoQuiz = Math.floor(Math.random() * 3);
+        if (key.t === 'w') {
+          el.className = `w-10 h-full rounded-b-md border border-panelBorder flex items-end justify-center pb-2 text-[10px] font-bold transition-all z-0 ${
+            isHighlighted ? 'bg-accent text-appBg shadow-[0_0_15px_rgba(251,161,0,0.6)] font-black scale-95' : 'bg-[#e1e1e6] text-[#121214]'
+          }`;
+          el.innerHTML = key.n;
+          whiteCount++;
+        } else {
+          const leftOffset = (whiteCount * whiteKeyWidth) - (whiteKeyWidth * 0.35) - 4;
+          el.className = `absolute top-2 w-7 h-24 rounded-b-sm border-x border-b border-black flex items-end justify-center pb-1 text-[8px] font-bold transition-all z-10 ${
+            isHighlighted ? 'bg-accent text-appBg shadow-[0_0_15px_rgba(251,161,0,0.8)] font-black scale-95' : 'bg-[#29292e] text-white'
+          }`;
+          el.style.left = `${leftOffset}px`;
+          el.innerHTML = key.n;
+        }
+        container.appendChild(el);
+      });
+    }
+
+    // --- QUIZ ENGINE BY LEVELS ---
+    let quizState = {
+      level: 1,
+      score: 0,
+      lives: 3,
+      timer: null,
+      timeLeft: 15000,
+      maxTime: 15000,
+      currentAnswer: null,
+      answered: false
+    };
+
+    function startQuiz() {
+      const selectedRadio = document.querySelector('input[name="quiz-level"]:checked');
+      quizState.level = selectedRadio ? parseInt(selectedRadio.value) : 1;
+      
+      quizState.score = 0;
+      quizState.lives = 3;
+      updateQuizUI();
+      switchView('quiz');
+      generateQuizQuestion();
+    }
+
+    function updateQuizUI() {
+      document.getElementById('ui-score').innerText = quizState.score;
+      document.getElementById('ui-lives').innerText = '❤️'.repeat(quizState.lives) + '🖤'.repeat(3 - quizState.lives);
+      document.getElementById('ui-quiz-level-badge').innerText = `Nível ${quizState.level}`;
+    }
+
+    function generateQuizQuestion() {
+      if (quizState.lives <= 0) {
+        gameOver();
+        return;
+      }
+
+      quizState.answered = false;
+
+      // Pick Random Root
+      const rootIdx = Math.floor(Math.random() * 12);
+      const rootNote = notesArr[rootIdx];
+      const displayRoot = getNoteString(rootIdx, rootNote);
+
+      let targetDegree, correctChord, questionType;
+
+      if (quizState.level === 1) {
+        // Level 1: Basic Triads (I, ii, iii, IV, V, vi)
+        const l1Degrees = [
+          { num: "I", interval: 0, suffix: "" },
+          { num: "ii", interval: 2, suffix: "m" },
+          { num: "iii", interval: 4, suffix: "m" },
+          { num: "IV", interval: 5, suffix: "" },
+          { num: "V", interval: 7, suffix: "" },
+          { num: "vi", interval: 9, suffix: "m" }
+        ];
+        targetDegree = l1Degrees[Math.floor(Math.random() * l1Degrees.length)];
+        const chordRootIdx = (rootIdx + targetDegree.interval) % 12;
+        correctChord = getNoteString(chordRootIdx, displayRoot) + targetDegree.suffix;
+        questionType = "Tríade Básica (Campo Harmônico)";
+      } else if (quizState.level === 2) {
+        // Level 2: Tetrads with 7ths (Maj7, m7, 7)
+        const l2Degrees = [
+          { num: "I", interval: 0, suffix: "Maj7" },
+          { num: "ii", interval: 2, suffix: "m7" },
+          { num: "iii", interval: 4, suffix: "m7" },
+          { num: "IV", interval: 5, suffix: "Maj7" },
+          { num: "V", interval: 7, suffix: "7" },
+          { num: "vi", interval: 9, suffix: "m7" },
+          { num: "vii°", interval: 11, suffix: "m7(b5)" }
+        ];
+        targetDegree = l2Degrees[Math.floor(Math.random() * l2Degrees.length)];
+        const chordRootIdx = (rootIdx + targetDegree.interval) % 12;
+        correctChord = getNoteString(chordRootIdx, displayRoot) + targetDegree.suffix;
+        questionType = "Tétrade com Sétima";
+      } else {
+        // Level 3: Advanced (Min-Maj7, Diminished 7th, 9ths)
+        const l3Types = [
+          { type: 'mMaj7', desc: 'Acorde Menor com 7ª Maior (m(Maj7))' },
+          { type: 'dim', desc: 'Tríade Diminuta' },
+          { type: 'maj9', desc: 'Acorde com 9ª Maior (Maj9)' },
+          { type: 'm9', desc: 'Acorde Menor com 9ª (m9)' }
+        ];
+        const chosen = l3Types[Math.floor(Math.random() * l3Types.length)];
+        const fObj = chordFormulas[chosen.type];
+        correctChord = displayRoot + fObj.suffix;
+        questionType = chosen.desc;
+        targetDegree = { num: chosen.desc };
+      }
+
+      // Update question text
+      document.getElementById('ui-question-type').innerText = questionType;
+      document.getElementById('ui-target-key').innerText = `${displayRoot} Maior`;
+      document.getElementById('ui-target-degree').innerText = `Grau ${targetDegree.num}`;
+
+      // Generate options
+      let options = [correctChord];
+      while (options.length < 4) {
+        const rndRoot = Math.floor(Math.random() * 12);
+        const rndStr = getNoteString(rndRoot, displayRoot);
+        const suffixes = quizState.level === 1 ? ["", "m", "dim"] : (quizState.level === 2 ? ["Maj7", "m7", "7", "m7(b5)"] : ["m(Maj7)", "Maj9", "m9", "dim"]);
+        const rndSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+        const wrongChord = rndStr + rndSuffix;
+        if (!options.includes(wrongChord)) {
+          options.push(wrongChord);
+        }
+      }
+
+      options = options.sort(() => Math.random() - 0.5);
+      quizState.currentAnswer = correctChord;
+
+      const optionsContainer = document.getElementById('quiz-options');
+      optionsContainer.innerHTML = '';
+
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "bg-appBg hover:bg-panelBorder border-2 border-panelBorder text-white font-bold text-xl py-5 rounded-xl transition-all w-full";
+        btn.innerText = opt;
+        btn.onclick = () => checkQuizAnswer(opt, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      startQuizTimer();
+    }
+
+    function startQuizTimer() {
+      clearInterval(quizState.timer);
+      quizState.timeLeft = quizState.maxTime;
+      const timerBar = document.getElementById('timer-bar');
+      
+      timerBar.style.transition = 'none';
+      timerBar.style.width = '100%';
+      timerBar.style.backgroundColor = '#04d361';
+      void timerBar.offsetWidth;
+      timerBar.style.transition = 'width 0.1s linear, background-color 0.3s ease';
+
+      let lastTime = Date.now();
+      quizState.timer = setInterval(() => {
+        const now = Date.now();
+        const delta = now - lastTime;
+        lastTime = now;
         
-        if (tipoQuiz === 0) {
-            const grauEscolhido = Math.floor(Math.random() * 5);
-            const nomesGraus = ['I (Tônica)', 'II (Supertônica)', 'III (Mediante)', 'IV (Subdominante)', 'V (Dominante)'];
-            const qual = qualidadesTriades[grauEscolhido];
-            const respostaCerta = escala[grauEscolhido] + qual;
+        quizState.timeLeft -= delta;
+        const percentage = (quizState.timeLeft / quizState.maxTime) * 100;
+        timerBar.style.width = `${Math.max(0, percentage)}%`;
 
-            let opcoes = [respostaCerta];
-            while(opcoes.length < 4) {
-                let randNota = notasNaturais[Math.floor(Math.random() * notasNaturais.length)];
-                let randQual = Math.random() > 0.5 ? 'm' : '';
-                let optFalsa = randNota + randQual;
-                if(!opcoes.includes(optFalsa)) opcoes.push(optFalsa);
-            }
-            opcoes.sort(() => Math.random() - 0.5);
+        if (percentage < 30) timerBar.style.backgroundColor = '#f75a68';
+        else if (percentage < 60) timerBar.style.backgroundColor = '#fba100';
 
-            perguntaAtual = {
-                pergunta: `Missão: No campo harmônico de <strong>${tonicaAleatoria} Maior</strong>, qual acorde ocupa o grau <strong>${nomesGraus[grauEscolhido]}</strong>?`,
-                resposta: respostaCerta,
-                opcoes: opcoes
-            };
+        if (quizState.timeLeft <= 0) {
+          clearInterval(quizState.timer);
+          handleQuizTimeout();
+        }
+      }, 100);
+    }
 
-        } else if (tipoQuiz === 1) {
-            const grauEscolhido = Math.floor(Math.random() * 4);
-            const notaFund = escala[grauEscolhido];
-            const qual = qualidadesTriades[grauEscolhido];
-            const nomeAcorde = notaFund + qual;
-            const notasDoAcorde = obterNotasAcorde(notaFund, qual);
-            const respostaCerta = notasDoAcorde.join(' - ');
+    function checkQuizAnswer(selected, btnElement) {
+      if (quizState.answered) return;
+      quizState.answered = true;
+      clearInterval(quizState.timer);
 
-            let opcoes = [respostaCerta];
-            while(opcoes.length < 4) {
-                let f1 = notasNaturais[Math.floor(Math.random() * notasNaturais.length)];
-                let f2 = notasNaturais[Math.floor(Math.random() * notasNaturais.length)];
-                let f3 = notasNaturais[Math.floor(Math.random() * notasNaturais.length)];
-                let optFalsa = `${f1} - ${f2} - ${f3}`;
-                if(!opcoes.includes(optFalsa)) opcoes.push(optFalsa);
-            }
-            opcoes.sort(() => Math.random() - 0.5);
+      const buttons = document.getElementById('quiz-options').children;
 
-            perguntaAtual = {
-                pergunta: `Desafio de Tríade: Quais notas formam o acorde de <strong>${nomeAcorde}</strong>?`,
-                resposta: respostaCerta,
-                opcoes: opcoes
-            };
+      if (selected === quizState.currentAnswer) {
+        btnElement.classList.remove('bg-appBg', 'border-panelBorder');
+        btnElement.classList.add('bg-primary/20', 'border-primary', 'text-primary');
+        
+        const timeBonus = Math.floor((quizState.timeLeft / quizState.maxTime) * 50);
+        quizState.score += (100 * quizState.level + timeBonus);
 
-        } else {
-            const respostaCerta = escala.join(' - ');
-            let opcoes = [respostaCerta];
-            while(opcoes.length < 4) {
-                let copia = [...notasNaturais];
-                copia.sort(() => Math.random() - 0.5);
-                let optFalsa = copia.join(' - ');
-                if(!opcoes.includes(optFalsa)) opcoes.push(optFalsa);
-            }
-            opcoes.sort(() => Math.random() - 0.5);
+        setTimeout(() => {
+          updateQuizUI();
+          generateQuizQuestion();
+        }, 1000);
+      } else {
+        btnElement.classList.remove('bg-appBg', 'border-panelBorder');
+        btnElement.classList.add('bg-danger/20', 'border-danger', 'text-danger');
 
-            perguntaAtual = {
-                pergunta: `Desafio de Escala: Qual é a sequência correta da escala maior começando por <strong>${tonicaAleatoria}</strong>?`,
-                resposta: respostaCerta,
-                opcoes: opcoes
-            };
+        for (let b of buttons) {
+          if (b.innerText === quizState.currentAnswer) {
+            b.classList.remove('bg-appBg', 'border-panelBorder');
+            b.classList.add('bg-primary/20', 'border-primary', 'text-primary');
+          }
         }
 
-        document.getElementById('quizQuestion').innerHTML = perguntaAtual.pergunta;
-        const optContainer = document.getElementById('quizOptions');
-        optContainer.innerHTML = '';
-        document.getElementById('quizFeedback').textContent = '';
-        document.getElementById('btnProxima').style.display = 'none';
+        quizState.lives--;
+        updateQuizUI();
 
-        perguntaAtual.opcoes.forEach(op => {
-            let btn = document.createElement('button');
-            btn.className = 'quiz-btn';
-            btn.textContent = op;
-            btn.onclick = () => verificarRespostaJogo(op, btn);
-            optContainer.appendChild(btn);
-        });
+        setTimeout(() => {
+          generateQuizQuestion();
+        }, 1500);
+      }
     }
 
-    function verificarRespostaJogo(escolha, botaoClicado) {
-        const botoes = document.querySelectorAll('.quiz-btn');
-        botoes.forEach(b => b.disabled = true); // Trava cliques após a resposta
+    function handleQuizTimeout() {
+      if (quizState.answered) return;
+      quizState.answered = true;
 
-        const feedback = document.getElementById('quizFeedback');
-
-        if(escolha === perguntaAtual.resposta) {
-            botaoClicado.classList.add('correct');
-            feedback.style.color = 'var(--accent)';
-            feedback.textContent = '🎉 Mandou bem! Resposta Correta (+100 pts)';
-            pontuacaoJogo += 100;
-            nivelJogo = Math.floor(pontuacaoJogo / 300) + 1;
-        } else {
-            botaoClicado.classList.add('wrong');
-            botoes.forEach(b => {
-                if(b.textContent === perguntaAtual.resposta) b.classList.add('correct');
-            });
-            feedback.style.color = 'var(--danger)';
-            feedback.textContent = `💥 Errado! A resposta certa era: ${perguntaAtual.resposta}`;
-            vidasJogo--;
+      const buttons = document.getElementById('quiz-options').children;
+      for (let b of buttons) {
+        if (b.innerText === quizState.currentAnswer) {
+          b.classList.remove('bg-appBg', 'border-panelBorder');
+          b.classList.add('bg-primary/20', 'border-primary', 'text-primary');
         }
+      }
 
-        atualizarHUD();
+      quizState.lives--;
+      updateQuizUI();
 
-        if(vidasJogo <= 0) {
-            feedback.innerHTML += `<br><span style="color:var(--warning);">Game Over! Suas vidas acabaram. Clique em avançar para reiniciar.</span>`;
-        }
-
-        document.getElementById('btnProxima').style.display = 'block';
+      setTimeout(() => {
+        generateQuizQuestion();
+      }, 1500);
     }
 
-    function atualizarHUD() {
-        document.getElementById('txtPontos').textContent = pontuacaoJogo;
-        document.getElementById('txtVidas').textContent = '❤️'.repeat(Math.max(0, vidasJogo));
-        document.getElementById('txtNivel').textContent = nivelJogo;
+    function gameOver() {
+      switchView('gameover');
+      document.getElementById('ui-final-score').innerText = quizState.score;
+      loadHighScores();
     }
 
-    function proximaFaseJogo() {
-        if(vidasJogo <= 0) {
-            reiniciarJogo();
-        } else {
-            gerarPerguntaJogo();
-        }
+    // --- HIGHSCORES ---
+    function saveScore() {
+      const nameInput = document.getElementById('player-name').value.trim() || 'Anônimo';
+      let scores = JSON.parse(localStorage.getItem('harmonia_pro_master_scores') || '[]');
+      
+      scores.push({
+        name: nameInput,
+        score: quizState.score,
+        level: quizState.level,
+        date: new Date().toLocaleDateString('pt-BR')
+      });
+
+      scores.sort((a, b) => b.score - a.score);
+      scores = scores.slice(0, 10);
+      
+      localStorage.setItem('harmonia_pro_master_scores', JSON.stringify(scores));
+      document.getElementById('player-name').value = '';
+      
+      loadHighScores();
+      switchView('hub');
     }
 
-    function reiniciarJogo() {
-        pontuacaoJogo = 0;
-        vidasJogo = 3;
-        nivelJogo = 1;
-        atualizarHUD();
-        gerarPerguntaJogo();
+    function loadHighScores() {
+      const listContainer = document.getElementById('high-scores-list');
+      if (!listContainer) return;
+
+      let scores = JSON.parse(localStorage.getItem('harmonia_pro_master_scores') || '[]');
+      listContainer.innerHTML = '';
+
+      if (scores.length === 0) {
+        listContainer.innerHTML = '<p class="text-xs text-textMuted">Nenhuma pontuação registrada.</p>';
+        return;
+      }
+
+      scores.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center bg-appBg p-3 rounded-lg border border-panelBorder text-sm";
+        
+        let rankColor = "text-textMuted";
+        if (i === 0) rankColor = "text-yellow-400 font-bold text-base";
+        else if (i === 1) rankColor = "text-gray-300 font-bold";
+        else if (i === 2) rankColor = "text-amber-600 font-bold";
+
+        div.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-4 text-center ${rankColor}">#${i+1}</span>
+            <div>
+              <span class="text-white font-medium block">${s.name}</span>
+              <span class="text-[10px] text-textMuted">Nível ${s.level} • ${s.date}</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-primary font-bold block">${s.score} pts</span>
+          </div>
+        `;
+        listContainer.appendChild(div);
+      });
     }
 
+    function clearScores() {
+      if (confirm("Tem certeza que deseja limpar o ranking?")) {
+        localStorage.removeItem('harmonia_pro_master_scores');
+        loadHighScores();
+      }
+    }
+
+    // Init on load
     window.onload = () => {
-        atualizarAplicacao();
-        gerarPerguntaJogo();
+      loadHighScores();
+      populateScalesTable();
+      renderPianoForNotes([0, 4, 7], "C");
     };
-</script>
-
+  </script>
 </body>
 </html>
