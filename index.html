@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Harmonia Pro - Masterclass Do Zero ao Campo Harmônico</title>
+  <title>Harmonia Pro - Masterclass com Violão</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- SQL.js for SQLite in Browser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -55,24 +58,16 @@
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .custom-checkbox input:checked + div {
-      background-color: #04d361;
-      border-color: #04d361;
-    }
-    .custom-checkbox input:checked + div svg {
-      display: block;
-    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-3 sm:p-6 md:p-8">
 
-  <header class="w-full max-w-6xl flex justify-between items-center mb-6 bg-panelBg p-4 rounded-2xl border border-panelBorder shadow-xl">
+  <header class="w-full max-w-6xl flex justify-between items-center mb-6 bg-panelBg p-4 rounded-2xl border border-panelBorder shadow-xl flex-wrap gap-4">
     <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('hub')">
-      <div class="bg-primary/20 p-2.5 rounded-xl text-primary text-2xl font-bold">🎹</div>
+      <div class="bg-primary/20 p-2.5 rounded-xl text-primary text-2xl font-bold">🎸</div>
       <div>
         <h1 class="text-lg sm:text-xl font-extrabold text-white">Harmonia <span class="text-primary">Pro Master</span></h1>
-        <p class="text-[10px] sm:text-xs text-textMuted uppercase tracking-widest font-semibold">Do Zero ao Campo Harmônico Completo</p>
+        <p class="text-[10px] sm:text-xs text-textMuted uppercase tracking-widest font-semibold">Violão • Tríades & Tétrades</p>
       </div>
     </div>
     <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
@@ -80,239 +75,473 @@
         🏠 Início
       </button>
       <button onclick="switchView('guide')" class="text-xs sm:text-sm bg-panelBorder/50 hover:bg-panelBorder text-textMain px-3 py-2 rounded-lg font-semibold transition-all">
-        📚 Guia Do Zero
+        📚 Guia
       </button>
-      <button onclick="switchView('builder')" class="text-xs sm:text-sm bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/30 px-3 py-2 rounded-lg font-semibold transition-all">
+      <button onclick="switchView('chord-builder')" class="text-xs sm:text-sm bg-accent/20 hover:bg-accent/30 text-accent border border-accent/30 px-3 py-2 rounded-lg font-semibold transition-all">
         🛠️ Construtor
       </button>
+      <button onclick="switchView('chord-db')" class="text-xs sm:text-sm bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/30 px-3 py-2 rounded-lg font-semibold transition-all">
+        🗄️ Admin / Cadastro SQL
+      </button>
+      <button onclick="switchView('harmonic-field')" class="text-xs sm:text-sm bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/30 px-3 py-2 rounded-lg font-semibold transition-all">
+        🎼 Campo Harmônico
+      </button>
+      <button onclick="switchView('metronome')" class="text-xs sm:text-sm bg-danger/20 hover:bg-danger/30 text-danger border border-danger/30 px-3 py-2 rounded-lg font-semibold transition-all">
+        ⏱️ Metrônomo
+      </button>
       <button onclick="switchView('quizcfg')" class="text-xs sm:text-sm bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 px-3 py-2 rounded-lg font-semibold transition-all">
-        🎮 Quiz por Níveis
+        🎮 Quiz
       </button>
     </div>
   </header>
 
   <main class="w-full max-w-6xl flex-1 flex flex-col">
 
+    <!-- HUB SECTION -->
     <section id="view-hub" class="view-section active w-full">
       <div class="text-center max-w-2xl mx-auto mb-10 mt-4">
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-3">Domine a Harmonia Musical</h2>
-        <p class="text-textMuted text-sm sm:text-base">Explore escalas maiores completas, monte acordes complexos com 7ª e 9ª, estude o campo harmônico avançado e teste seus conhecimentos em quizzes interativos.</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-3">Domine Cifras e Acordes</h2>
+        <p class="text-textMuted text-sm sm:text-base">Visualize acordes isolados, estude campos harmônicos completos com Tríades e Tétrades no Diagrama do Violão, gerenciando seu painel administrativo e banco de dados SQLite.</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <!-- Card 1 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <div onclick="switchView('guide')" class="bg-panelBg hover:border-secondary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
           <div class="text-3xl mb-4 bg-secondary/10 w-12 h-12 rounded-xl flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">📚</div>
-          <h3 class="text-lg font-bold text-white mb-2">Guia Do Zero & Escalas</h3>
-          <p class="text-xs text-textMuted leading-relaxed mb-4">Aprenda desde o básico (notas, tons e semitons) até a tabela completa de todas as 12 tonalidades de escalas maiores com armadura de clave.</p>
+          <h3 class="text-base font-bold text-white mb-2">Guia & Escalas</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Tabelas completas de escalas maiores e menores.</p>
           <span class="text-xs text-secondary font-bold group-hover:underline">Acessar Guia →</span>
         </div>
 
-        <!-- Card 2 -->
-        <div onclick="switchView('builder')" class="bg-panelBg hover:border-accent/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+        <div onclick="switchView('chord-builder')" class="bg-panelBg hover:border-accent/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
           <div class="text-3xl mb-4 bg-accent/10 w-12 h-12 rounded-xl flex items-center justify-center text-accent group-hover:scale-110 transition-transform">🛠️</div>
-          <h3 class="text-lg font-bold text-white mb-2">Construtor & Campo Harmônico</h3>
-          <p class="text-xs text-textMuted leading-relaxed mb-4">Construa tríades, tétrades (com 7ª menor, 7ª maior, Min-Maj7) e extensões de 9ª. Visualize o campo harmônico estendido e piano interativo.</p>
+          <h3 class="text-base font-bold text-white mb-2">Construtor de Acordes</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Monte acordes individuais e visualize no violão.</p>
           <span class="text-xs text-accent font-bold group-hover:underline">Abrir Construtor →</span>
         </div>
 
-        <!-- Card 3 -->
-        <div onclick="switchView('quizcfg')" class="bg-panelBg hover:border-primary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+        <div onclick="switchView('chord-db')" class="bg-panelBg hover:border-secondary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+          <div class="text-3xl mb-4 bg-secondary/10 w-12 h-12 rounded-xl flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">🗄️</div>
+          <h3 class="text-base font-bold text-white mb-2">Painel Admin / Cadastro (SQLite)</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Banco de dados administrativo com acordes de violão e múltiplas variações.</p>
+          <span class="text-xs text-secondary font-bold group-hover:underline">Gerenciar Acordes →</span>
+        </div>
+
+        <div onclick="switchView('harmonic-field')" class="bg-panelBg hover:border-secondary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+          <div class="text-3xl mb-4 bg-secondary/10 w-12 h-12 rounded-xl flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">🎼</div>
+          <h3 class="text-base font-bold text-white mb-2">Campo Harmônico</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Explore os graus tonais com tríades e tétrades interativas.</p>
+          <span class="text-xs text-secondary font-bold group-hover:underline">Ver Campo →</span>
+        </div>
+
+        <div onclick="switchView('metronome')" class="bg-panelBg hover:border-danger/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl">
+          <div class="text-3xl mb-4 bg-danger/10 w-12 h-12 rounded-xl flex items-center justify-center text-danger group-hover:scale-110 transition-transform">⏱️</div>
+          <h3 class="text-base font-bold text-white mb-2">Metrônomo de Treino</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Aprimore seu tempo, ritmo e velocidade com cliques customizáveis.</p>
+          <span class="text-xs text-danger font-bold group-hover:underline">Treinar Ritmo →</span>
+        </div>
+
+        <div onclick="switchView('quizcfg')" class="bg-panelBg hover:border-primary/50 border border-panelBorder p-6 rounded-2xl cursor-pointer transition-all group shadow-xl md:col-span-2 lg:col-span-1">
           <div class="text-3xl mb-4 bg-primary/10 w-12 h-12 rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">🎮</div>
-          <h3 class="text-lg font-bold text-white mb-2">Quiz por Níveis & Ranking</h3>
-          <p class="text-xs text-textMuted leading-relaxed mb-4">Desafie-se em 3 níveis de dificuldade (Iniciante, Intermediário, Avançado) com perguntas sobre graus, acordes com 7ª/9ª e intervalos.</p>
+          <h3 class="text-base font-bold text-white mb-2">Quiz por Níveis</h3>
+          <p class="text-xs text-textMuted leading-relaxed mb-4">Desafie-se respondendo perguntas de harmonia e suba no ranking.</p>
           <span class="text-xs text-primary font-bold group-hover:underline">Jogar Agora →</span>
         </div>
       </div>
     </section>
 
+    <!-- GUIDE SECTION -->
     <section id="view-guide" class="view-section w-full">
       <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder mb-8 shadow-2xl">
         <div class="flex justify-between items-center mb-6 border-b border-panelBorder pb-4">
           <div>
             <span class="text-xs uppercase font-bold text-secondary tracking-widest block mb-1">Módulo Teórico</span>
-            <h2 class="text-2xl font-extrabold text-white">Do Zero à Estrutura das Escalas Maiores</h2>
+            <h2 class="text-2xl font-extrabold text-white">Escalas e Cifras Simplificadas</h2>
           </div>
-          <button onclick="switchView('builder')" class="hidden sm:block text-xs bg-secondary hover:bg-secondaryHover text-white px-4 py-2 rounded-lg font-semibold transition-all">
+          <button onclick="switchView('chord-builder')" class="hidden sm:block text-xs bg-accent hover:bg-accent/80 text-appBg px-4 py-2 rounded-lg font-semibold transition-all">
             Ir para Construtor 🛠️
           </button>
         </div>
 
-        <!-- Step 1 to 4 Accordion / Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-sm text-textMuted">
           <div class="bg-appBg p-5 rounded-xl border border-panelBorder">
-            <h3 class="text-white font-bold text-base mb-2 flex items-center gap-2"><span class="text-primary">1.</span> O que são Notas e Tons?</h3>
-            <p>O universo musical ocidental é composto por 12 notas cromáticas: <code class="text-primary">C, C#, D, D#, E, F, F#, G, G#, A, A#, B</code>. A menor distância entre duas notas adjacentes é o <b>Semiton</b>. Dois semitons formam um <b>Tom</b>.</p>
+            <h3 class="text-white font-bold text-base mb-2 flex items-center gap-2"><span class="text-primary">1.</span> Tríades vs Tétrades</h3>
+            <p><strong>Tríades</strong> são acordes formados por 3 notas (fundamental, terça e quinta). <strong>Tétrades</strong> adicionam a sétima (<code class="text-primary">7M</code>, <code class="text-primary">m7</code>, <code class="text-primary">7</code>).</p>
           </div>
           <div class="bg-appBg p-5 rounded-xl border border-panelBorder">
-            <h3 class="text-white font-bold text-base mb-2 flex items-center gap-2"><span class="text-primary">2.</span> A Fórmula da Escala Maior</h3>
-            <p>A escala maior é a fundação da harmonia ocidental. Sua fórmula interválica a partir da tônica é sempre: <br><code class="bg-panelBorder px-2 py-0.5 rounded text-white font-bold mt-1 inline-block">T - T - S - T - T - T - S</code> (Tom, Tom, Semitom, Tom, Tom, Tom, Semitom).</p>
+            <h3 class="text-white font-bold text-base mb-2 flex items-center gap-2"><span class="text-secondary">2.</span> Estudo no Violão</h3>
+            <p>No <strong>Violão</strong> você analisa o formato em diagrama (shape nos trastes com indicação de dedos e pestanas).</p>
           </div>
         </div>
 
-        <!-- Master Table of 12 Major Scales -->
-        <h3 class="text-lg font-bold text-white mb-3">Tabela Completa de Todas as 12 Escalas Maiores</h3>
-        <p class="text-xs text-textMuted mb-4">Veja as notas constituintes de cada tonalidade maior natural ou com acidentes:</p>
-        
+        <h3 class="text-lg font-bold text-white mb-3">Tabela de Escalas Maiores</h3>
         <div class="overflow-x-auto mb-8">
           <table class="w-full text-left text-xs sm:text-sm border-collapse">
             <thead>
               <tr class="border-b border-panelBorder text-primary bg-appBg">
-                <th class="p-3">Tonalidade (Raiz)</th>
-                <th class="p-3">Notas da Escala Maior</th>
-                <th class="p-3">Acidentes (Sust. / Bemóis)</th>
+                <th class="p-3">Tonalidade</th>
+                <th class="p-3">Notas da Escala</th>
+                <th class="p-3">Acidentes</th>
               </tr>
             </thead>
-            <tbody id="scales-table-body" class="text-textMain">
-              <!-- Populated by JS -->
-            </tbody>
+            <tbody id="scales-table-body" class="text-textMain"></tbody>
           </table>
         </div>
 
-        <div class="bg-secondary/10 p-5 rounded-xl border border-secondary/30">
-          <h4 class="text-white font-bold mb-2 flex items-center gap-2"><span>💡</span> Regra de Ouro do Campo Harmônico Maior</h4>
-          <p class="text-xs text-textMuted leading-relaxed">
-            Quando harmonizamos a escala maior em tétrades (acordes de 4 notas incluindo a 7ª), obtemos uma ordem imutável de qualidades de acordes para qualquer tom maior:
-            <br><b>I (Maj7) • ii (m7) • iii (m7) • IV (Maj7) • V (7) • vi (m7) • vii° (m7b5 / meio-diminuto)</b>.
-          </p>
+        <h3 class="text-lg font-bold text-white mb-3">Tabela de Escalas Menores Naturais</h3>
+        <div class="overflow-x-auto mb-8">
+          <table class="w-full text-left text-xs sm:text-sm border-collapse">
+            <thead>
+              <tr class="border-b border-panelBorder text-secondary bg-appBg">
+                <th class="p-3">Tonalidade Menor</th>
+                <th class="p-3">Notas da Escala</th>
+                <th class="p-3">Relativa Maior</th>
+              </tr>
+            </thead>
+            <tbody id="minor-scales-table-body" class="text-textMain"></tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <section id="view-builder" class="view-section w-full">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        
-        <!-- Controls Column -->
-        <div class="lg:col-span-1 space-y-6">
-          <div class="bg-panelBg p-6 rounded-2xl border border-panelBorder shadow-2xl">
-            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <span class="text-accent">🛠️</span> Construtor de Acordes
-            </h2>
-            <p class="text-xs text-textMuted mb-6">Selecione uma nota raiz e a extensão desejada para construir o acorde e ver sua fórmula e notas detalhadas.</p>
-
-            <div class="space-y-4 mb-6">
-              <div>
-                <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Nota Raiz (Tônica)</label>
-                <select id="builder-root" onchange="updateChordBuilder()" class="w-full bg-appBg text-white border border-panelBorder rounded-lg px-3 py-2.5 outline-none focus:border-accent text-sm font-semibold">
-                  <option value="0">C (Dó)</option>
-                  <option value="1">C# / Db</option>
-                  <option value="2">D (Ré)</option>
-                  <option value="3">D# / Eb</option>
-                  <option value="4">E (Mi)</option>
-                  <option value="5">F (Fá)</option>
-                  <option value="6">F# / Gb</option>
-                  <option value="7">G (Sol)</option>
-                  <option value="8">G# / Ab</option>
-                  <option value="9">A (Lá)</option>
-                  <option value="10">A# / Bb</option>
-                  <option value="11">B (Si)</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Tipo de Acorde / Qualidade</label>
-                <select id="builder-type" onchange="updateChordBuilder()" class="w-full bg-appBg text-white border border-panelBorder rounded-lg px-3 py-2.5 outline-none focus:border-accent text-sm font-semibold">
-                  <option value="maj">Tríade Maior (1, 3, 5)</option>
-                  <option value="min">Tríade Menor (1, b3, 5)</option>
-                  <option value="dim">Tríade Diminuta (1, b3, b5)</option>
-                  <option value="aug">Tríade Aumentada (1, 3, #5)</option>
-                  <option value="maj7">Com 7ª Maior - Maj7 (1, 3, 5, 7)</option>
-                  <option value="m7">Menor com 7ª Menor - m7 (1, b3, 5, b7)</option>
-                  <option value="7">Com 7ª Menor / Dominante - 7 (1, 3, 5, b7)</option>
-                  <option value="mMaj7">Menor com 7ª Maior - m(Maj7) (1, b3, 5, 7)</option>
-                  <option value="m7b5">Meio Diminuto - m7(b5) (1, b3, b5, b7)</option>
-                  <option value="maj9">Com 9ª Maior - Maj9 (1, 3, 5, 7, 9)</option>
-                  <option value="m9">Menor com 9ª - m9 (1, b3, 5, b7, 9)</option>
-                  <option value="9">Dominante com 9ª - 9 (1, 3, 5, b7, 9)</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="chord-output-card" class="bg-appBg p-4 rounded-xl border border-panelBorder text-center">
-              <span class="text-[10px] text-textMuted uppercase tracking-wider block mb-1">Acorde Gerado</span>
-              <div id="out-chord-name" class="text-2xl font-extrabold text-accent mb-2">Cmaj7</div>
-              <div id="out-chord-notes" class="text-xs text-textMain mb-1">Notas: C - E - G - B</div>
-              <div id="out-chord-formula" class="text-[11px] text-textMuted">Fórmula: 1 - 3 - 5 - 7</div>
-            </div>
+    <!-- CHORD BUILDER SECTION -->
+    <section id="view-chord-builder" class="view-section w-full">
+      <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder shadow-2xl mb-8">
+        <div class="flex justify-between items-center mb-6 border-b border-panelBorder pb-4 flex-wrap gap-3">
+          <div>
+            <span class="text-xs uppercase font-bold text-accent tracking-widest block mb-1">Subcategoria</span>
+            <h2 class="text-2xl font-extrabold text-white">🛠️ Construtor de Acordes</h2>
           </div>
+          <p class="text-xs text-textMuted">Monte qualquer acorde e visualize no instrumento selecionado.</p>
         </div>
 
-        <!-- Harmonic Field Generator & Table Column -->
-        <div class="lg:col-span-2 space-y-6">
-          <div class="bg-panelBg p-6 rounded-2xl border border-panelBorder shadow-2xl">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-              <div>
-                <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                  <span class="text-primary">🎹</span> Campo Harmônico Completo (Tétrades & 9ª)
-                </h2>
-                <p class="text-xs text-textMuted mt-1">Selecione uma tonalidade para gerar o campo harmônico completo com sétima e nona.</p>
-              </div>
-              <select id="hf-root" onchange="updateHarmonicField()" class="bg-appBg text-white border border-panelBorder rounded-lg px-3 py-2 outline-none focus:border-primary text-sm font-semibold">
-                <option value="0">C Maior</option>
-                <option value="1">C# / Db Maior</option>
-                <option value="2">D Maior</option>
-                <option value="3">D# / Eb Maior</option>
-                <option value="4">E Maior</option>
-                <option value="5">F Maior</option>
-                <option value="6">F# / Gb Maior</option>
-                <option value="7" selected>G Maior</option>
-                <option value="8">G# / Ab Maior</option>
-                <option value="9">A Maior</option>
-                <option value="10">A# / Bb Maior</option>
-                <option value="11">B Maior</option>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Controls -->
+          <div class="space-y-4 bg-appBg p-5 rounded-xl border border-panelBorder">
+            <h3 class="text-sm font-bold text-white mb-2">Selecionar Acorde</h3>
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Nota Raiz (Tônica)</label>
+              <select id="cb-root" onchange="updateStandaloneChordBuilder()" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2.5 outline-none focus:border-accent text-sm font-semibold">
+                <option value="0">C (Dó)</option>
+                <option value="1">C# / Db</option>
+                <option value="2">D (Ré)</option>
+                <option value="3">D# / Eb</option>
+                <option value="4">E (Mi)</option>
+                <option value="5">F (Fá)</option>
+                <option value="6">F# / Gb</option>
+                <option value="7">G (Sol)</option>
+                <option value="8">G# / Ab</option>
+                <option value="9">A (Lá)</option>
+                <option value="10">A# / Bb</option>
+                <option value="11">B (Si)</option>
               </select>
             </div>
 
-            <div class="overflow-x-auto mb-6">
-              <table class="w-full text-left text-xs sm:text-sm border-collapse">
-                <thead>
-                  <tr class="border-b border-panelBorder text-primary bg-appBg">
-                    <th class="p-3">Grau</th>
-                    <th class="p-3">Acorde (Tétrade)</th>
-                    <th class="p-3">Extensão 9ª</th>
-                    <th class="p-3">Notas do Acorde</th>
-                  </tr>
-                </thead>
-                <tbody id="hf-table-body" class="text-textMain">
-                  <!-- Populated by JS -->
-                </tbody>
-              </table>
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Qualidade do Acorde</label>
+              <select id="cb-type" onchange="updateStandaloneChordBuilder()" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2.5 outline-none focus:border-accent text-sm font-semibold">
+                <option value="maj">Maior (ex: C)</option>
+                <option value="min">Menor (ex: Cm)</option>
+                <option value="dim">Diminuto (ex: Cdim)</option>
+                <option value="aug">Aumentado (ex: Caug)</option>
+                <option value="maj7">Com 7ª Maior (ex: C7M)</option>
+                <option value="m7">Menor com 7ª (ex: Cm7)</option>
+                <option value="7">Com 7ª Dominante (ex: C7)</option>
+                <option value="m7b5">Meio Diminuto (ex: Cm7b5)</option>
+                <option value="dim7">Diminuto com 7ª (ex: C°7)</option>
+              </select>
             </div>
 
-            <!-- Interactive Piano Keyboard -->
-            <div class="bg-appBg p-5 rounded-2xl border border-panelBorder">
-              <div class="flex justify-between items-center mb-3">
-                <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                  <span>🎹</span> Teclado de Visualização do Acorde
+            <div class="bg-panelBg p-4 rounded-xl border border-panelBorder text-center mt-4">
+              <span class="text-[10px] text-textMuted uppercase tracking-wider block mb-1">Acorde Gerado</span>
+              <div id="cb-out-name" class="text-2xl font-extrabold text-accent mb-1">C</div>
+              <div id="cb-out-notes" class="text-xs text-textMain mb-1">Notas: C - E - G</div>
+              <div id="cb-out-formula" class="text-[11px] text-textMuted">Fórmula: 1 - 3 - 5</div>
+            </div>
+          </div>
+
+          <!-- Instrument Viewer -->
+          <div class="lg:col-span-2 bg-appBg p-5 rounded-xl border border-panelBorder flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1" id="cb-inst-title">
+                  <span>🎸</span> Visualização no Violão
                 </h3>
-                <span id="piano-active-note-label" class="text-xs text-primary font-semibold">Clique em um acorde acima para destacar no piano</span>
-              </div>
-              <div class="overflow-x-auto pb-2 pt-1 flex justify-center">
-                <div id="piano-container" class="relative flex h-36 bg-panelBg p-2 rounded-xl border border-panelBorder">
-                  <!-- Piano keys injected by JS -->
-                </div>
               </div>
             </div>
-
+            
+            <div id="cb-instrument-container" class="flex justify-center items-center py-6 min-h-[220px]"></div>
           </div>
         </div>
-
       </div>
     </section>
 
+    <!-- CHORD DATABASE (SQLITE) & ADMIN SECTION -->
+    <section id="view-chord-db" class="view-section w-full">
+      <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder shadow-2xl mb-8">
+        <div class="flex justify-between items-center mb-6 border-b border-panelBorder pb-4 flex-wrap gap-3">
+          <div>
+            <span class="text-xs uppercase font-bold text-secondary tracking-widest block mb-1">Painel Administrativo & Banco SQLite (Local)</span>
+            <h2 class="text-2xl font-extrabold text-white">🗄️ Painel Admin - Cadastro de Acordes de Violão</h2>
+          </div>
+          <p class="text-xs text-textMuted">Gerencie os cadastros do banco SQLite com controle total (CRUD).</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <!-- Form to Add Chord -->
+          <div class="bg-appBg p-5 rounded-xl border border-panelBorder space-y-4">
+            <h3 class="text-sm font-bold text-white mb-2" id="admin-form-title">Cadastrar Novo Acorde</h3>
+            <input type="hidden" id="db-edit-id" value="">
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Nome do Acorde (ex: C, Am7)</label>
+              <input type="text" id="db-chord-name" placeholder="Ex: C" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2 text-sm outline-none focus:border-secondary">
+            </div>
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Categoria</label>
+              <select id="db-chord-type" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2 text-sm outline-none focus:border-secondary font-semibold">
+                <option value="Maior">Maior</option>
+                <option value="Menor">Menor</option>
+                <option value="Com 9">Com 9 (add9 / 9)</option>
+                <option value="7 Maior">7 Maior (7M)</option>
+                <option value="7 Menor">7 Menor (m7)</option>
+                <option value="Sustenido/Bemol">Sustenido / Bemol</option>
+                <option value="Diminuta">Diminuta (dim)</option>
+                <option value="Com Quinta">Com Quinta (5 / Aumentada)</option>
+                <option value="Com Quarta">Com Quarta (sus4)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Variação</label>
+              <select id="db-chord-variation" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2 text-sm outline-none focus:border-secondary font-semibold">
+                <option value="Variação 1">Variação 1 (Principal)</option>
+                <option value="Variação 2">Variação 2</option>
+                <option value="Variação 3">Variação 3</option>
+                <option value="Variação 4">Variação 4</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Casas (6 cordas E-A-D-G-B-e, ex: x,3,2,0,1,0)</label>
+              <input type="text" id="db-chord-frets" placeholder="x,3,2,0,1,0" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2 text-sm outline-none focus:border-secondary">
+            </div>
+            <div>
+              <label class="block text-[10px] text-textMuted uppercase font-bold mb-1">Dedos (ex: 0,3,2,0,1,0)</label>
+              <input type="text" id="db-chord-fingers" placeholder="0,3,2,0,1,0" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2 text-sm outline-none focus:border-secondary">
+            </div>
+            <div class="flex gap-2">
+              <button onclick="saveAcordeToDB()" id="admin-save-btn" class="flex-1 bg-secondary hover:bg-secondaryHover text-white font-bold py-3 rounded-lg transition-all text-sm shadow-lg">
+                💾 Salvar no SQLite
+              </button>
+              <button onclick="resetAdminForm()" id="admin-cancel-btn" class="hidden bg-panelBorder hover:bg-panelBorder/80 text-textMain px-3 py-3 rounded-lg font-bold text-sm transition-all">
+                Cancelar
+              </button>
+            </div>
+          </div>
+
+          <!-- SQLite Table & Filter -->
+          <div class="lg:col-span-2 bg-appBg p-5 rounded-xl border border-panelBorder flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h3 class="text-sm font-bold text-white flex items-center gap-1">
+                  <span>📊</span> Acordes Cadastrados no Banco SQLite (Admin)
+                </h3>
+                <div class="flex gap-2">
+                  <select id="db-filter-category" onchange="loadAcordesFromDB()" class="bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-1.5 text-xs outline-none focus:border-secondary">
+                    <option value="">Todas as Categorias</option>
+                    <option value="Maior">Maior</option>
+                    <option value="Menor">Menor</option>
+                    <option value="Com 9">Com 9</option>
+                    <option value="7 Maior">7 Maior</option>
+                    <option value="7 Menor">7 Menor</option>
+                    <option value="Sustenido/Bemol">Sustenido/Bemol</option>
+                    <option value="Diminuta">Diminuta</option>
+                    <option value="Com Quinta">Com Quinta</option>
+                    <option value="Com Quarta">Com Quarta</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="overflow-x-auto max-h-[380px]">
+                <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                  <thead>
+                    <tr class="border-b border-panelBorder text-secondary bg-panelBg sticky top-0">
+                      <th class="p-3">Nome</th>
+                      <th class="p-3">Categoria</th>
+                      <th class="p-3">Variação</th>
+                      <th class="p-3">Casas (Frets)</th>
+                      <th class="p-3 text-right">Ações Admin</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sqlite-chords-tbody" class="text-textMain"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARMONIC FIELD BUILDER SECTION -->
+    <section id="view-harmonic-field" class="view-section w-full">
+      <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder shadow-2xl mb-8">
+        <div class="flex justify-between items-center mb-6 border-b border-panelBorder pb-4 flex-wrap gap-3">
+          <div>
+            <span class="text-xs uppercase font-bold text-secondary tracking-widest block mb-1">Subcategoria</span>
+            <h2 class="text-2xl font-extrabold text-white">🎼 Construtor de Campo Harmônico</h2>
+          </div>
+          <p class="text-xs text-textMuted">Selecione a tonalidade e analise os acordes gerados em Tríades ou Tétrades.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-4">
+            <div class="flex gap-2 flex-wrap items-center justify-between bg-appBg p-4 rounded-xl border border-panelBorder">
+              <div class="flex gap-2 flex-wrap">
+                <button onclick="setFieldMode('major')" id="hf-btn-major" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-primary text-appBg transition-all">
+                  Campo Maior
+                </button>
+                <button onclick="setFieldMode('minor')" id="hf-btn-minor" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-appBg text-textMuted hover:text-white border border-panelBorder transition-all">
+                  Campo Menor
+                </button>
+                <div class="w-px h-6 bg-panelBorder self-center hidden sm:block"></div>
+                <button onclick="setFieldType('triads')" id="hf-type-triads" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-accent text-appBg transition-all">
+                  Tríades
+                </button>
+                <button onclick="setFieldType('tetrads')" id="hf-type-tetrads" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-appBg text-textMuted hover:text-white border border-panelBorder transition-all">
+                  Tétrades
+                </button>
+              </div>
+
+              <select id="hf-root" onchange="updateHarmonicField()" class="bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-1.5 outline-none focus:border-primary text-xs font-semibold">
+                <option value="0">C (Dó)</option>
+                <option value="1">C# / Db</option>
+                <option value="2">D (Ré)</option>
+                <option value="3">D# / Eb</option>
+                <option value="4">E (Mi)</option>
+                <option value="5">F (Fá)</option>
+                <option value="6">F# / Gb</option>
+                <option value="7" selected>G (Sol)</option>
+                <option value="8">G# / Ab</option>
+                <option value="9">A (Lá)</option>
+                <option value="10">A# / Bb</option>
+                <option value="11">B (Si)</option>
+              </select>
+            </div>
+
+            <p id="hf-description" class="text-xs text-textMuted">Clique em qualquer acorde da tabela para exibi-lo no instrumento abaixo.</p>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                <thead>
+                  <tr id="hf-table-header" class="border-b border-panelBorder text-primary bg-appBg">
+                    <th class="p-3">Grau</th>
+                    <th class="p-3">Cifra</th>
+                    <th class="p-3">Função</th>
+                    <th class="p-3">Notas</th>
+                  </tr>
+                </thead>
+                <tbody id="hf-table-body" class="text-textMain"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-appBg p-5 rounded-xl border border-panelBorder flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xs font-bold text-white flex items-center gap-1" id="hf-inst-title">
+                  <span>🎸</span> Visualização no Violão
+                </h3>
+              </div>
+              <div id="hf-chord-display-name" class="text-sm font-bold text-accent mb-2 text-center">Selecione um acorde</div>
+            </div>
+            
+            <div id="hf-instrument-container" class="flex justify-center items-center py-4 min-h-[200px]"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRONOME SECTION -->
+    <section id="view-metronome" class="view-section w-full max-w-2xl mx-auto">
+      <div class="bg-panelBg p-6 sm:p-10 rounded-2xl border border-panelBorder shadow-2xl text-center">
+        <span class="text-xs uppercase font-bold text-danger tracking-widest block mb-1">Ferramenta de Prática</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-6">⏱️ Metrônomo Interativo</h2>
+
+        <!-- BPM DISPLAY & CONTROLS -->
+        <div class="bg-appBg p-6 rounded-2xl border border-panelBorder mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <button onclick="adjustBPM(-5)" class="bg-panelBorder hover:bg-panelBorder/80 text-white font-bold w-10 h-10 rounded-xl text-lg transition-all">-5</button>
+            <button onclick="adjustBPM(-1)" class="bg-panelBorder hover:bg-panelBorder/80 text-white font-bold w-10 h-10 rounded-xl text-lg transition-all">-1</button>
+            <div>
+              <span id="bpm-display" class="text-5xl sm:text-6xl font-black text-danger">120</span>
+              <span class="text-xs text-textMuted uppercase tracking-widest block mt-1">BPM (Batidas por Minuto)</span>
+            </div>
+            <button onclick="adjustBPM(1)" class="bg-panelBorder hover:bg-panelBorder/80 text-white font-bold w-10 h-10 rounded-xl text-lg transition-all">+1</button>
+            <button onclick="adjustBPM(5)" class="bg-panelBorder hover:bg-panelBorder/80 text-white font-bold w-10 h-10 rounded-xl text-lg transition-all">+5</button>
+          </div>
+
+          <!-- BPM SLIDER -->
+          <input type="range" id="bpm-slider" min="40" max="240" value="120" oninput="setBPM(this.value)" class="w-full accent-danger cursor-pointer mb-2">
+        </div>
+
+        <!-- TIMER CONFIG SLIDER -->
+        <div class="bg-appBg p-6 rounded-2xl border border-panelBorder mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <button onclick="adjustTimerMinutes(-1)" class="bg-panelBorder hover:bg-panelBorder/80 text-white font-bold w-10 h-10 rounded-xl text-lg transition-all">-1</button>
+            <div>
+              <span id="timer-minutes-display" class="text-4xl sm:text-5xl font-black text-accent">5</span>
+              <span class="text-xs text-textMuted uppercase tracking-widest block mt-1">Minutos de Prática (Máx: 20m)</span>
+            </div>
+            <button onclick="adjustTimerMinutes(1)" class="bg-panelBorder hover:bg-panelBorder/80 text-white font-bold w-10 h-10 rounded-xl text-lg transition-all">+1</button>
+          </div>
+
+          <!-- TIMER SLIDER -->
+          <input type="range" id="timer-slider" min="1" max="20" value="5" oninput="setTimerMinutes(this.value)" class="w-full accent-accent cursor-pointer mb-4">
+
+          <div class="text-center bg-panelBg p-3 rounded-xl border border-panelBorder">
+            <span class="text-[10px] text-textMuted uppercase block mb-1">Tempo Restante</span>
+            <span id="countdown-display" class="text-3xl font-black text-accent tracking-wider">05:00</span>
+          </div>
+        </div>
+
+        <!-- BEATS / COMPASS CONFIG -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <div class="bg-appBg p-4 rounded-xl border border-panelBorder text-left">
+            <label class="block text-xs font-bold text-textMuted uppercase mb-2">Compasso (Batidas por Compasso)</label>
+            <select id="metronome-beats" onchange="updateBeatCount(this.value)" class="w-full bg-panelBg text-white border border-panelBorder rounded-lg px-3 py-2 text-sm font-semibold outline-none focus:border-danger">
+              <option value="2">2/4 (Binário)</option>
+              <option value="3">3/4 (Ternário)</option>
+              <option value="4" selected>4/4 (Quartenário)</option>
+              <option value="6">6/8 (Composto)</option>
+            </select>
+          </div>
+
+          <div class="bg-appBg p-4 rounded-xl border border-panelBorder flex flex-col justify-center items-center">
+            <span class="block text-xs font-bold text-textMuted uppercase mb-2">Indicador Visual de Pulso</span>
+            <div id="beat-dots-container" class="flex gap-2 justify-center items-center h-8">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAY / STOP BUTTON -->
+        <button id="metronome-toggle-btn" onclick="toggleMetronome()" class="w-full bg-danger hover:bg-danger/80 text-white font-extrabold text-lg py-4 rounded-xl transition-all shadow-[0_0_25px_rgba(247,90,104,0.3)] flex items-center justify-center gap-3">
+          <span id="metronome-btn-icon">▶</span>
+          <span id="metronome-btn-text">Iniciar Metrônomo</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- QUIZ CONFIG SECTION -->
     <section id="view-quizcfg" class="view-section w-full max-w-2xl mx-auto mt-2">
       <div class="bg-panelBg p-6 sm:p-8 rounded-2xl border border-panelBorder shadow-2xl">
-        <h2 class="text-2xl font-bold text-white mb-2 text-center">Quiz por Níveis de Dificuldade</h2>
-        <p class="text-textMuted text-sm text-center mb-8">Escolha o nível de complexidade para testar seus conhecimentos em harmonia e construção de acordes.</p>
+        <h2 class="text-2xl font-bold text-white mb-2 text-center">Quiz por Níveis</h2>
+        <p class="text-textMuted text-sm text-center mb-8">Teste seus conhecimentos com cifras simplificadas.</p>
 
         <div class="space-y-4 mb-8">
-          <!-- Level Selection Cards -->
           <label class="flex items-center justify-between p-4 rounded-xl border border-panelBorder bg-appBg cursor-pointer hover:border-primary/50 transition-colors">
             <div class="flex items-center gap-3">
               <input type="radio" name="quiz-level" value="1" checked class="accent-primary w-4 h-4">
               <div>
-                <span class="text-white font-bold text-sm block">Nível 1: Iniciante (Tríades & Graus Básicos)</span>
-                <span class="text-textMuted text-xs">Foco em graus maiores, menores e tríades básicas.</span>
+                <span class="text-white font-bold text-sm block">Nível 1: Iniciante (Tríades & Cifras Básicas)</span>
+                <span class="text-textMuted text-xs">Acordes maiores e menores tradicionais.</span>
               </div>
             </div>
             <span class="text-xs bg-primary/20 text-primary px-2.5 py-1 rounded-full font-bold">Fácil</span>
@@ -322,8 +551,8 @@
             <div class="flex items-center gap-3">
               <input type="radio" name="quiz-level" value="2" class="accent-secondary w-4 h-4">
               <div>
-                <span class="text-white font-bold text-sm block">Nível 2: Intermediário (Tétrades & 7ª)</span>
-                <span class="text-textMuted text-xs">Inclui acordes com 7ª maior (Maj7), menor (m7) e dominante (7).</span>
+                <span class="text-white font-bold text-sm block">Nível 2: Intermediário (7M, m7 e Diminutos)</span>
+                <span class="text-textMuted text-xs">Inclui tétrades com nomenclaturas simplificadas.</span>
               </div>
             </div>
             <span class="text-xs bg-secondary/20 text-secondary px-2.5 py-1 rounded-full font-bold">Médio</span>
@@ -333,8 +562,8 @@
             <div class="flex items-center gap-3">
               <input type="radio" name="quiz-level" value="3" class="accent-accent w-4 h-4">
               <div>
-                <span class="text-white font-bold text-sm block">Nível 3: Avançado (Min-Maj7, Diminutos & 9ª)</span>
-                <span class="text-textMuted text-xs">Acordes complexos, m(Maj7), m7(b5), extensões de 9ª e intervalos.</span>
+                <span class="text-white font-bold text-sm block">Nível 3: Avançado (Dominantes e Menor Harmônica)</span>
+                <span class="text-textMuted text-xs">Acordes de dominante com extensões.</span>
               </div>
             </div>
             <span class="text-xs bg-accent/20 text-accent px-2.5 py-1 rounded-full font-bold">Avançado</span>
@@ -347,7 +576,7 @@
       </div>
     </section>
 
-    <!-- Quiz Active View -->
+    <!-- QUIZ ACTIVE VIEW -->
     <section id="view-quiz" class="view-section w-full max-w-3xl mx-auto mt-2">
       <div class="bg-panelBg rounded-2xl border border-panelBorder overflow-hidden shadow-2xl">
         <div class="bg-appBg p-4 sm:p-6 border-b border-panelBorder flex justify-between items-center">
@@ -372,14 +601,12 @@
           <div class="text-3xl sm:text-5xl font-extrabold text-white mb-2" id="ui-target-degree">Grau IV</div>
           <p class="text-lg sm:text-xl text-textMuted mb-10">na tonalidade de <strong class="text-white text-2xl sm:text-3xl bg-panelBorder px-4 py-1 rounded-lg ml-2" id="ui-target-key">C Maior</strong></p>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="quiz-options">
-            <!-- Injected by JS -->
-          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="quiz-options"></div>
         </div>
       </div>
     </section>
 
-    <!-- Game Over View -->
+    <!-- GAME OVER VIEW -->
     <section id="view-gameover" class="view-section w-full max-w-2xl mx-auto mt-4">
       <div class="bg-panelBg p-8 rounded-2xl border border-panelBorder shadow-2xl text-center">
         <div class="text-6xl mb-4">🏆</div>
@@ -389,7 +616,7 @@
 
         <div class="max-w-sm mx-auto bg-appBg p-6 rounded-xl border border-panelBorder mb-8">
           <h3 class="text-sm font-bold text-white mb-3 text-left">Salvar no Ranking</h3>
-          <input type="text" id="player-name" placeholder="Seu nome ou apelido" maxlength="15" class="w-full bg-panelBg text-white border border-panelBorder px-4 py-3 rounded-lg outline-none focus:border-primary mb-3 text-sm">
+          <input type="text" id="player-name" placeholder="Seu apelido" maxlength="15" class="w-full bg-panelBg text-white border border-panelBorder px-4 py-3 rounded-lg outline-none focus:border-primary mb-3 text-sm">
           <button onclick="saveScore()" class="w-full bg-primary hover:bg-primaryHover text-appBg font-bold py-3 rounded-lg transition-all text-sm">
             Gravar Pontuação
           </button>
@@ -400,9 +627,7 @@
             <span>Top 10 Jogadores</span>
             <button onclick="clearScores()" class="text-[10px] text-danger hover:underline">Limpar</button>
           </h3>
-          <div id="high-scores-list" class="space-y-2">
-            <!-- Populated by JS -->
-          </div>
+          <div id="high-scores-list" class="space-y-2"></div>
         </div>
 
         <button onclick="switchView('hub')" class="mt-8 text-sm text-textMuted hover:text-white underline transition-colors">
@@ -414,7 +639,236 @@
   </main>
 
   <script>
-    // --- MUSIC THEORY CORE DATA & ENGINE ---
+    // --- SQLITE DATABASE (SQL.JS) INITIALIZATION ---
+    let sqliteDb = null;
+
+    function initSQLiteDatabase() {
+      if (typeof initSqlJs !== 'undefined') {
+        initSqlJs({
+          locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+        }).then(SQL => {
+          sqliteDb = new SQL.Database();
+          sqliteDb.run(`
+            CREATE TABLE IF NOT EXISTS acordes (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              nome TEXT,
+              tipo TEXT,
+              variacao TEXT,
+              frets TEXT,
+              dedos TEXT
+            );
+          `);
+
+          // Check if table is empty, seed with initial chords (Complete categories)
+          const res = sqliteDb.exec("SELECT COUNT(*) as count FROM acordes");
+          const count = res[0] ? res[0].values[0][0] : 0;
+          if (count === 0) {
+            seedInitialSqliteChords();
+          }
+          loadAcordesFromDB();
+        }).catch(err => {
+          console.error("Erro ao carregar SQLite WASM:", err);
+        });
+      } else {
+        setTimeout(initSQLiteDatabase, 500);
+      }
+    }
+
+    function seedInitialSqliteChords() {
+      const initialChords = [
+        // Maior
+        ['C', 'Maior', 'Variação 1', 'x,3,2,0,1,0', '0,3,2,0,1,0'],
+        ['C', 'Maior', 'Variação 2', 'x,3,5,5,5,3', '0,1,3,3,3,1'],
+        ['D', 'Maior', 'Variação 1', 'x,x,0,2,3,2', '0,0,0,1,3,2'],
+        ['E', 'Maior', 'Variação 1', '0,2,2,1,0,0', '0,2,3,1,0,0'],
+        ['F', 'Maior', 'Variação 1', '1,3,3,2,1,1', '1,3,4,2,1,1'],
+        ['G', 'Maior', 'Variação 1', '3,2,0,0,0,3', '2,1,0,0,0,3'],
+        ['A', 'Maior', 'Variação 1', 'x,0,2,2,2,0', '0,0,1,2,3,0'],
+        ['B', 'Maior', 'Variação 1', 'x,2,4,4,4,2', '0,1,2,3,4,1'],
+
+        // Menor
+        ['Cm', 'Menor', 'Variação 1', 'x,3,5,5,4,3', '0,1,3,4,2,1'],
+        ['Dm', 'Menor', 'Variação 1', 'x,x,0,2,3,1', '0,0,0,2,3,1'],
+        ['Em', 'Menor', 'Variação 1', '0,2,2,0,0,0', '0,2,3,0,0,0'],
+        ['Fm', 'Menor', 'Variação 1', '1,3,3,1,1,1', '1,3,4,1,1,1'],
+        ['Gm', 'Menor', 'Variação 1', '3,5,5,3,3,3', '1,3,4,1,1,1'],
+        ['Am', 'Menor', 'Variação 1', 'x,0,2,2,1,0', '0,0,2,3,1,0'],
+        ['Bm', 'Menor', 'Variação 1', 'x,2,4,4,3,2', '0,1,3,4,2,1'],
+
+        // Com 9
+        ['C9', 'Com 9', 'Variação 1', 'x,3,2,3,3,0', '0,2,1,3,4,0'],
+        ['D9', 'Com 9', 'Variação 1', 'x,x,0,2,3,0', '0,0,0,1,3,0'],
+        ['E9', 'Com 9', 'Variação 1', '0,2,2,1,2,2', '0,2,3,1,4,4'],
+        ['G9', 'Com 9', 'Variação 1', '3,x,0,2,0,3', '2,0,0,1,0,3'],
+        ['A9', 'Com 9', 'Variação 1', 'x,0,2,4,2,0', '0,0,1,3,2,0'],
+
+        // 7 Maior (7M)
+        ['C7M', '7 Maior', 'Variação 1', 'x,3,2,0,0,0', '0,3,2,0,0,0'],
+        ['D7M', '7 Maior', 'Variação 1', 'x,x,0,2,2,2', '0,0,0,1,1,1'],
+        ['E7M', '7 Maior', 'Variação 1', '0,2,1,1,0,0', '0,2,1,1,0,0'],
+        ['F7M', '7 Maior', 'Variação 1', '1,3,3,2,1,0', '1,3,4,2,1,0'],
+        ['G7M', '7 Maior', 'Variação 1', '3,2,0,0,0,2', '3,2,0,0,0,1'],
+        ['A7M', '7 Maior', 'Variação 1', 'x,0,2,1,2,0', '0,0,2,1,3,0'],
+        ['B7M', '7 Maior', 'Variação 1', 'x,2,4,3,4,2', '0,1,3,2,4,1'],
+
+        // 7 Menor (m7)
+        ['Cm7', '7 Menor', 'Variação 1', 'x,3,5,3,4,3', '0,1,3,1,2,1'],
+        ['Dm7', '7 Menor', 'Variação 1', 'x,x,0,2,1,1', '0,0,0,2,1,1'],
+        ['Em7', '7 Menor', 'Variação 1', '0,2,0,0,0,0', '0,2,0,0,0,0'],
+        ['Fm7', '7 Menor', 'Variação 1', '1,3,1,1,1,1', '1,3,1,1,1,1'],
+        ['Gm7', '7 Menor', 'Variação 1', '3,5,3,3,3,3', '1,3,1,1,1,1'],
+        ['Am7', '7 Menor', 'Variação 1', 'x,0,2,0,1,0', '0,0,2,0,1,0'],
+        ['Bm7', '7 Menor', 'Variação 1', 'x,2,4,2,3,2', '0,1,3,1,2,1'],
+
+        // Sustenido / Bemol (# / b)
+        ['C# / Db', 'Sustenido/Bemol', 'Variação 1', '4,4,6,6,6,4', '1,1,3,4,2,1'],
+        ['D# / Eb', 'Sustenido/Bemol', 'Variação 1', 'x,6,8,8,8,6', '0,1,3,3,3,1'],
+        ['F# / Gb', 'Sustenido/Bemol', 'Variação 1', '2,4,4,3,2,2', '1,3,4,2,1,1'],
+        ['G# / Ab', 'Sustenido/Bemol', 'Variação 1', '4,6,6,5,4,4', '1,3,4,2,1,1'],
+        ['A# / Bb', 'Sustenido/Bemol', 'Variação 1', 'x,1,3,3,3,1', '0,1,2,3,4,1'],
+
+        // Diminuta (dim / °7)
+        ['Cdim', 'Diminuta', 'Variação 1', 'x,3,4,2,4,x', '0,2,4,1,3,0'],
+        ['Ddim', 'Diminuta', 'Variação 1', 'x,x,0,1,3,1', '0,0,0,1,4,2'],
+        ['Edim', 'Diminuta', 'Variação 1', 'x,x,2,3,2,3', '0,0,1,3,2,4'],
+        ['Fdim', 'Diminuta', 'Variação 1', 'xx,3,4,3,4', '0,0,1,2,1,3'],
+        ['Gdim', 'Diminuta', 'Variação 1', '3,4,2,3,x,x', '2,4,1,3,0,0'],
+        ['Adim', 'Diminuta', 'Variação 1', 'x,0,1,2,1,2', '0,0,1,3,2,4'],
+
+        // Com Quinta (5)
+        ['C5', 'Com Quinta', 'Variação 1', 'x,3,5,5,x,x', '0,1,3,4,0,0'],
+        ['D5', 'Com Quinta', 'Variação 1', 'x,5,7,7,x,x', '0,1,3,4,0,0'],
+        ['E5', 'Com Quinta', 'Variação 1', '0,2,2,x,x,x', '0,1,2,0,0,0'],
+        ['G5', 'Com Quinta', 'Variação 1', '3,5,5,x,x,x', '1,3,4,0,0,0'],
+        ['A5', 'Com Quinta', 'Variação 1', 'x,0,2,2,x,x', '0,0,1,2,0,0'],
+
+        // Com Quarta (sus4)
+        ['Csus4', 'Com Quarta', 'Variação 1', 'x,3,3,0,1,1', '0,2,3,0,1,1'],
+        ['Dsus4', 'Com Quarta', 'Variação 1', 'x,x,0,2,3,3', '0,0,0,1,3,4'],
+        ['Esus4', 'Com Quarta', 'Variação 1', '0,2,2,2,0,0', '0,1,2,3,0,0'],
+        ['Asus4', 'Com Quarta', 'Variação 1', 'x,0,2,2,3,0', '0,0,1,2,4,0']
+      ];
+
+      const stmt = sqliteDb.prepare("INSERT INTO acordes (nome, tipo, variacao, frets, dedos) VALUES (?, ?, ?, ?, ?)");
+      initialChords.forEach(chord => {
+        stmt.run(chord);
+      });
+      stmt.free();
+    }
+
+    function loadAcordesFromDB() {
+      if (!sqliteDb) return;
+      const filterCat = document.getElementById('db-filter-category').value;
+      let query = "SELECT id, nome, tipo, variacao, frets, dedos FROM acordes";
+      let params = [];
+      if (filterCat) {
+        query += " WHERE tipo = ?";
+        params.push(filterCat);
+      }
+      query += " ORDER BY nome ASC, variacao ASC";
+
+      const stmt = sqliteDb.prepare(query);
+      stmt.bind(params);
+      
+      const tbody = document.getElementById('sqlite-chords-tbody');
+      tbody.innerHTML = '';
+
+      let hasRows = false;
+      while (stmt.step()) {
+        hasRows = true;
+        const row = stmt.get();
+        const id = row[0], nome = row[1], tipo = row[2], variacao = row[3], frets = row[4];
+        
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-panelBorder/50 hover:bg-panelBorder/30 transition-colors";
+        tr.innerHTML = `
+          <td class="p-3 font-extrabold text-white">${nome}</td>
+          <td class="p-3 text-secondary font-semibold">${tipo}</td>
+          <td class="p-3 text-textMuted text-xs">${variacao}</td>
+          <td class="p-3 text-accent font-mono text-xs">${frets}</td>
+          <td class="p-3 text-right space-x-1">
+            <button onclick="editAcordeInDB(${id})" class="bg-accent/20 hover:bg-accent/30 text-accent text-xs px-2.5 py-1 rounded font-bold transition-all">Editar</button>
+            <button onclick="deleteAcordeFromDB(${id})" class="bg-danger/20 hover:bg-danger/30 text-danger text-xs px-2.5 py-1 rounded font-bold transition-all">Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+      stmt.free();
+
+      if (!hasRows) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-textMuted text-xs">Nenhum acorde encontrado no banco SQLite.</td></tr>`;
+      }
+    }
+
+    function saveAcordeToDB() {
+      if (!sqliteDb) return;
+      const editId = document.getElementById('db-edit-id').value;
+      const nome = document.getElementById('db-chord-name').value.trim();
+      const tipo = document.getElementById('db-chord-type').value;
+      const variacao = document.getElementById('db-chord-variation').value;
+      const frets = document.getElementById('db-chord-frets').value.trim();
+      const dedos = document.getElementById('db-chord-fingers').value.trim();
+
+      if (!nome || !frets) {
+        alert("Preencha pelo menos o Nome e as Casas (Frets) do acorde!");
+        return;
+      }
+
+      try {
+        if (editId) {
+          sqliteDb.run("UPDATE acordes SET nome = ?, tipo = ?, variacao = ?, frets = ?, dedos = ? WHERE id = ?", [nome, tipo, variacao, frets, dedos, editId]);
+          alert("Acorde atualizado com sucesso no SQLite!");
+        } else {
+          sqliteDb.run("INSERT INTO acordes (nome, tipo, variacao, frets, dedos) VALUES (?, ?, ?, ?, ?)", [nome, tipo, variacao, frets, dedos]);
+          alert("Acorde cadastrado com sucesso no SQLite!");
+        }
+        resetAdminForm();
+        loadAcordesFromDB();
+      } catch (e) {
+        console.error(e);
+        alert("Erro ao salvar no banco de dados.");
+      }
+    }
+
+    function editAcordeInDB(id) {
+      if (!sqliteDb) return;
+      const stmt = sqliteDb.prepare("SELECT nome, tipo, variacao, frets, dedos FROM acordes WHERE id = ?");
+      stmt.bind([id]);
+      if (stmt.step()) {
+        const row = stmt.get();
+        document.getElementById('db-edit-id').value = id;
+        document.getElementById('db-chord-name').value = row[0];
+        document.getElementById('db-chord-type').value = row[1];
+        document.getElementById('db-chord-variation').value = row[2];
+        document.getElementById('db-chord-frets').value = row[3];
+        document.getElementById('db-chord-fingers').value = row[4];
+
+        document.getElementById('admin-form-title').innerText = "Editar Acorde";
+        document.getElementById('admin-save-btn').innerText = "💾 Atualizar Acorde";
+        document.getElementById('admin-cancel-btn').classList.remove('hidden');
+      }
+      stmt.free();
+    }
+
+    function resetAdminForm() {
+      document.getElementById('db-edit-id').value = '';
+      document.getElementById('db-chord-name').value = '';
+      document.getElementById('db-chord-frets').value = '';
+      document.getElementById('db-chord-fingers').value = '';
+      document.getElementById('admin-form-title').innerText = "Cadastrar Novo Acorde";
+      document.getElementById('admin-save-btn').innerText = "💾 Salvar no SQLite";
+      document.getElementById('admin-cancel-btn').classList.add('hidden');
+    }
+
+    function deleteAcordeFromDB(id) {
+      if (!sqliteDb) return;
+      if (confirm("Deseja realmente excluir este acorde do SQLite?")) {
+        sqliteDb.run("DELETE FROM acordes WHERE id = ?", [id]);
+        loadAcordesFromDB();
+      }
+    }
+
+    // --- ORIGINAL APP LOGIC & FUNCTIONS ---
     const notesArr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
     const notesFlatMap = { "C#": "Db", "D#": "Eb", "F#": "Gb", "G#": "Ab", "A#": "Bb" };
     const useFlatsTones = ["F", "A#", "D#", "G#", "C#"];
@@ -427,23 +881,36 @@
       return sharpNote;
     }
 
-    // 12 Major Scales definition with their exact notes
     const majorScalesData = [
-      { root: "C", notes: ["C", "D", "E", "F", "G", "A", "B"], accidentals: "Nenhuma (Tons Naturais)" },
-      { root: "C# / Db", notes: ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"], accidentals: "5 Bemóis (Db)" },
-      { root: "D", notes: ["D", "E", "F#", "G", "A", "B", "C#"], accidentals: "2 Sustenidos (F#, C#)" },
-      { root: "D# / Eb", notes: ["Eb", "F", "G", "Ab", "Bb", "C", "D"], accidentals: "3 Bemóis (Bb, Eb, Ab)" },
-      { root: "E", notes: ["E", "F#", "G#", "A", "B", "C#", "D#"], accidentals: "4 Sustenidos (F#, C#, G#, D#)" },
-      { root: "F", notes: ["F", "G", "A", "Bb", "C", "D", "E"], accidentals: "1 Bemol (Bb)" },
-      { root: "F# / Gb", notes: ["F#", "G#", "A#", "B", "C#", "D#", "F"], accidentals: "6 Sustenidos / 6 Bemóis" },
-      { root: "G", notes: ["G", "A", "B", "C", "D", "E", "F#"], accidentals: "1 Sustenido (F#)" },
-      { root: "G# / Ab", notes: ["Ab", "Bb", "C", "Db", "Eb", "F", "G"], accidentals: "4 Bemóis (Bb, Eb, Ab, Db)" },
-      { root: "A", notes: ["A", "B", "C#", "D", "E", "F#", "G#"], accidentals: "3 Sustenidos (F#, C#, G#)" },
-      { root: "A# / Bb", notes: ["Bb", "C", "D", "Eb", "F", "G", "A"], accidentals: "2 Bemóis (Bb, Eb)" },
+      { root: "C", notes: ["C", "D", "E", "F", "G", "A", "B"], accidentals: "Nenhuma" },
+      { root: "C# / Db", notes: ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"], accidentals: "5 Bemóis" },
+      { root: "D", notes: ["D", "E", "F#", "G", "A", "B", "C#"], accidentals: "2 Sustenidos" },
+      { root: "D# / Eb", notes: ["Eb", "F", "G", "Ab", "Bb", "C", "D"], accidentals: "3 Bemóis" },
+      { root: "E", notes: ["E", "F#", "G#", "A", "B", "C#", "D#"], accidentals: "4 Sustenidos" },
+      { root: "F", notes: ["F", "G", "A", "Bb", "C", "D", "E"], accidentals: "1 Bemol" },
+      { root: "F# / Gb", notes: ["F#", "G#", "A#", "B", "C#", "D#", "F"], accidentals: "6 Sustenidos" },
+      { root: "G", notes: ["G", "A", "B", "C", "D", "E", "F#"], accidentals: "1 Sustenido" },
+      { root: "G# / Ab", notes: ["Ab", "Bb", "C", "Db", "Eb", "F", "G"], accidentals: "4 Bemóis" },
+      { root: "A", notes: ["A", "B", "C#", "D", "E", "F#", "G#"], accidentals: "3 Sustenidos" },
+      { root: "A# / Bb", notes: ["Bb", "C", "D", "Eb", "F", "G", "A"], accidentals: "2 Bemóis" },
       { root: "B", notes: ["B", "C#", "D#", "E", "F#", "G#", "A#"], accidentals: "5 Sustenidos" }
     ];
 
-    // Navigation
+    const minorScalesData = [
+      { root: "A Menor", notes: ["A", "B", "C", "D", "E", "F", "G"], relMajor: "C Maior" },
+      { root: "A# / Bb Menor", notes: ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab"], relMajor: "Db Maior" },
+      { root: "B Menor", notes: ["B", "C#", "D", "E", "F#", "G", "A"], relMajor: "D Maior" },
+      { root: "C Menor", notes: ["C", "D", "Eb", "F", "G", "Ab", "Bb"], relMajor: "Eb Maior" },
+      { root: "C# / Db Menor", notes: ["C#", "D#", "E", "F#", "G#", "A", "B"], relMajor: "E Maior" },
+      { root: "D Menor", notes: ["D", "E", "F", "G", "A", "Bb", "C"], relMajor: "F Maior" },
+      { root: "D# / Eb Menor", notes: ["D#", "E#", "F#", "G#", "A#", "B", "C#"], relMajor: "F# Maior" },
+      { root: "E Menor", notes: ["E", "F#", "G", "A", "B", "C", "D"], relMajor: "G Maior" },
+      { root: "F Menor", notes: ["F", "G", "Ab", "Bb", "C", "Db", "Eb"], relMajor: "Ab Maior" },
+      { root: "F# / Gb Menor", notes: ["F#", "G#", "A", "B", "C#", "D", "E"], relMajor: "A Maior" },
+      { root: "G Menor", notes: ["G", "A", "Bb", "C", "D", "Eb", "F"], relMajor: "Bb Maior" },
+      { root: "G# / Ab Menor", notes: ["G#", "A#", "B", "C#", "D#", "E", "F#"], relMajor: "B Maior" }
+    ];
+
     function switchView(viewId) {
       document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
       document.getElementById('view-' + viewId).classList.add('active');
@@ -451,15 +918,20 @@
 
       if (viewId === 'guide') {
         populateScalesTable();
-      } else if (viewId === 'builder') {
-        updateChordBuilder();
+      } else if (viewId === 'chord-builder') {
+        updateStandaloneChordBuilder();
+      } else if (viewId === 'chord-db') {
+        loadAcordesFromDB();
+      } else if (viewId === 'harmonic-field') {
         updateHarmonicField();
       } else if (viewId === 'hub') {
         loadHighScores();
+      } else if (viewId === 'metronome') {
+        renderBeatDots();
+        updateCountdownDisplay();
       }
     }
 
-    // Populate Scales Table in Guide
     function populateScalesTable() {
       const tbody = document.getElementById('scales-table-body');
       tbody.innerHTML = '';
@@ -473,27 +945,112 @@
         `;
         tbody.appendChild(tr);
       });
+
+      const minorTbody = document.getElementById('minor-scales-table-body');
+      minorTbody.innerHTML = '';
+      minorScalesData.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-panelBorder/50 hover:bg-panelBorder/30";
+        tr.innerHTML = `
+          <td class="p-3 font-extrabold text-white">${s.root}</td>
+          <td class="p-3 font-semibold text-secondary">${s.notes.join(' - ')}</td>
+          <td class="p-3 text-textMuted text-xs">${s.relMajor}</td>
+        `;
+        minorTbody.appendChild(tr);
+      });
     }
 
-    // --- CHORD BUILDER ENGINE ---
+    // --- CHORD FORMULAS ---
     const chordFormulas = {
-      maj: { name: 'Tríade Maior', intervals: [0, 4, 7], formula: '1 - 3 - 5', suffix: '' },
-      min: { name: 'Tríade Menor', intervals: [0, 3, 7], formula: '1 - b3 - 5', suffix: 'm' },
-      dim: { name: 'Tríade Diminuta', intervals: [0, 3, 6], formula: '1 - b3 - b5', suffix: 'dim' },
-      aug: { name: 'Tríade Aumentada', intervals: [0, 4, 8], formula: '1 - 3 - #5', suffix: 'aug' },
-      maj7: { name: 'Com 7ª Maior', intervals: [0, 4, 7, 11], formula: '1 - 3 - 5 - 7', suffix: 'Maj7' },
-      m7: { name: 'Menor com 7ª Menor', intervals: [0, 3, 7, 10], formula: '1 - b3 - 5 - b7', suffix: 'm7' },
-      7: { name: 'Dominante com 7ª', intervals: [0, 4, 7, 10], formula: '1 - 3 - 5 - b7', suffix: '7' },
-      mMaj7: { name: 'Menor com 7ª Maior (Min-Maj7)', intervals: [0, 3, 7, 11], formula: '1 - b3 - 5 - 7', suffix: 'm(Maj7)' },
-      m7b5: { name: 'Meio Diminuto', intervals: [0, 3, 6, 10], formula: '1 - b3 - b5 - b7', suffix: 'm7(b5)' },
-      maj9: { name: 'Com 9ª Maior', intervals: [0, 4, 7, 11, 14], formula: '1 - 3 - 5 - 7 - 9', suffix: 'Maj9' },
-      m9: { name: 'Menor com 9ª', intervals: [0, 3, 7, 10, 14], formula: '1 - b3 - 5 - b7 - 9', suffix: 'm9' },
-      9: { name: 'Dominante com 9ª', intervals: [0, 4, 7, 10, 14], formula: '1 - 3 - 5 - b7 - 9', suffix: '9' }
+      maj: { name: 'Maior', intervals: [0, 4, 7], formula: '1 - 3 - 5', suffix: '' },
+      min: { name: 'Menor', intervals: [0, 3, 7], formula: '1 - b3 - 5', suffix: 'm' },
+      dim: { name: 'Diminuto', intervals: [0, 3, 6], formula: '1 - b3 - b5', suffix: 'dim' },
+      aug: { name: 'Aumentado', intervals: [0, 4, 8], formula: '1 - 3 - #5', suffix: 'aug' },
+      maj7: { name: 'Com 7ª Maior', intervals: [0, 4, 7, 11], formula: '1 - 3 - 5 - 7', suffix: '7M' },
+      m7: { name: 'Menor com 7ª', intervals: [0, 3, 7, 10], formula: '1 - b3 - 5 - b7', suffix: 'm7' },
+      7: { name: 'Com 7ª Dominante', intervals: [0, 4, 7, 10], formula: '1 - 3 - 5 - b7', suffix: '7' },
+      m7b5: { name: 'Meio Diminuto', intervals: [0, 3, 6, 10], formula: '1 - b3 - b5 - b7', suffix: 'm7b5' },
+      dim7: { name: 'Diminuto com 7ª', intervals: [0, 3, 6, 9], formula: '1 - b3 - b5 - bb7', suffix: '°7' }
     };
 
-    function updateChordBuilder() {
-      const rootIdx = parseInt(document.getElementById('builder-root').value);
-      const chordKey = document.getElementById('builder-type').value;
+    // --- GUITAR SHAPES DICTIONARY ---
+    const guitarShapesMap = {
+      "C": { frets: ["x", 3, 2, 0, 1, 0], fingers: ["", 3, 2, "", 1, ""] },
+      "Cm": { frets: ["x", 3, 5, 5, 4, 3], barred: { fret: 3, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+      "Cdim": { frets: ["x", 3, 4, 2, 4, "x"], fingers: ["", 2, 4, 1, 3, ""] },
+      "Caug": { frets: ["x", 3, 2, 1, 1, "x"], fingers: ["", 3, 2, 1, 1, ""] },
+      "C7M": { frets: ["x", 3, 2, 0, 0, 0], fingers: ["", 3, 2, "", "", ""] },
+      "Cm7": { frets: ["x", 3, 5, 3, 4, 3], barred: { fret: 3, from: 1, to: 5 }, fingers: ["", 1, 3, 1, 2, 1] },
+      "C7": { frets: ["x", 3, 2, 3, 1, 0], fingers: ["", 3, 2, 4, 1, ""] },
+      "Cm7b5": { frets: ["x", 3, 4, 3, 4, "x"], fingers: ["", 1, 3, 2, 4, ""] },
+      "C°7": { frets: ["x", 3, 4, 2, 4, "x"], fingers: ["", 2, 4, 1, 3, ""] },
+
+      "C#": { frets: [4, 4, 6, 6, 6, 4], barred: { fret: 4, from: 0, to: 5 }, fingers: [1, 1, 3, 4, 2, 1] },
+      "C#m": { frets: ["x", 4, 6, 6, 5, 4], barred: { fret: 4, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+      "Db": { frets: [4, 4, 6, 6, 6, 4], barred: { fret: 4, from: 0, to: 5 }, fingers: [1, 1, 3, 4, 2, 1] },
+      "Dbm": { frets: ["x", 4, 6, 6, 5, 4], barred: { fret: 4, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+
+      "D": { frets: ["x", "x", 0, 2, 3, 2], fingers: ["", "", "", 1, 3, 2] },
+      "Dm": { frets: ["x", "x", 0, 2, 3, 1], fingers: ["", "", "", 2, 3, 1] },
+      "Ddim": { frets: ["x", "x", 0, 1, 3, 1], fingers: ["", "", "", 1, 4, 2] },
+      "Daug": { frets: ["x", "x", 0, 3, 3, 2], fingers: ["", "", "", 2, 3, 1] },
+      "D7M": { frets: ["x", "x", 0, 2, 2, 2], barred: { fret: 2, from: 3, to: 5 }, fingers: ["", "", "", 1, 1, 1] },
+      "Dm7": { frets: ["x", "x", 0, 2, 1, 1], barred: { fret: 1, from: 4, to: 5 }, fingers: ["", "", "", 2, 1, 1] },
+      "D7": { frets: ["x", "x", 0, 2, 1, 2], fingers: ["", "", "", 2, 1, 3] },
+
+      "D#": { frets: ["x", 6, 8, 8, 8, 6], barred: { fret: 6, from: 1, to: 5 }, fingers: ["", 1, 3, 3, 3, 1] },
+      "D#m": { frets: ["x", 6, 8, 8, 7, 6], barred: { fret: 6, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+      "Eb": { frets: ["x", 6, 8, 8, 8, 6], barred: { fret: 6, from: 1, to: 5 }, fingers: ["", 1, 3, 3, 3, 1] },
+      "Ebm": { frets: ["x", 6, 8, 8, 7, 6], barred: { fret: 6, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+
+      "E": { frets: [0, 2, 2, 1, 0, 0], fingers: ["", 2, 3, 1, "", ""] },
+      "Em": { frets: [0, 2, 2, 0, 0, 0], fingers: ["", 2, 3, "", "", ""] },
+      "Edim": { frets: ["x", "x", 2, 3, 2, 3], fingers: ["", "", 1, 3, 2, 4] },
+      "Eaug": { frets: [0, 3, 2, 1, 1, 0], fingers: ["", 3, 2, 1, 1, ""] },
+      "E7M": { frets: [0, 2, 1, 1, 0, 0], fingers: ["", 2, 1, 1, "", ""] },
+      "Em7": { frets: [0, 2, 0, 0, 0, 0], fingers: ["", 2, "", "", "", ""] },
+      "E7": { frets: [0, 2, 0, 1, 0, 0], fingers: ["", 2, "", 1, "", ""] },
+
+      "F": { frets: [1, 3, 3, 2, 1, 1], barred: { fret: 1, from: 0, to: 5 }, fingers: [1, 3, 4, 2, 1, 1] },
+      "Fm": { frets: [1, 3, 3, 1, 1, 1], barred: { fret: 1, from: 0, to: 5 }, fingers: [1, 3, 4, 1, 1, 1] },
+      "F#": { frets: [2, 4, 4, 3, 2, 2], barred: { fret: 2, from: 0, to: 5 }, fingers: [1, 3, 4, 2, 1, 1] },
+      "F#m": { frets: [2, 4, 4, 2, 2, 2], barred: { fret: 2, from: 0, to: 5 }, fingers: [1, 3, 4, 1, 1, 1] },
+      "Gb": { frets: [2, 4, 4, 3, 2, 2], barred: { fret: 2, from: 0, to: 5 }, fingers: [1, 3, 4, 2, 1, 1] },
+      "Gbm": { frets: [2, 4, 4, 2, 2, 2], barred: { fret: 2, from: 0, to: 5 }, fingers: [1, 3, 4, 1, 1, 1] },
+
+      "G": { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, "", "", "", 3] },
+      "Gm": { frets: [3, 5, 5, 3, 3, 3], barred: { fret: 3, from: 0, to: 5 }, fingers: [1, 3, 4, 1, 1, 1] },
+      "G7M": { frets: [3, 2, 0, 0, 0, 2], fingers: [3, 2, "", "", "", 1] },
+      "Gm7": { frets: [3, 5, 3, 3, 3, 3], barred: { fret: 3, from: 0, to: 5 }, fingers: [1, 4, 1, 1, 1, 1] },
+      "G7": { frets: [3, 2, 0, 0, 0, 1], fingers: [3, 2, "", "", "", 1] },
+
+      "G#": { frets: [4, 6, 6, 5, 4, 4], barred: { fret: 4, from: 0, to: 5 }, fingers: [1, 3, 4, 2, 1, 1] },
+      "G#m": { frets: [4, 6, 6, 4, 4, 4], barred: { fret: 4, from: 0, to: 5 }, fingers: [1, 3, 4, 1, 1, 1] },
+      "Ab": { frets: [4, 6, 6, 5, 4, 4], barred: { fret: 4, from: 0, to: 5 }, fingers: [1, 3, 4, 2, 1, 1] },
+      "Abm": { frets: [4, 6, 6, 4, 4, 4], barred: { fret: 4, from: 0, to: 5 }, fingers: [1, 3, 4, 1, 1, 1] },
+
+      "A": { frets: ["x", 0, 2, 2, 2, 0], fingers: ["", "", 1, 2, 3, ""] },
+      "Am": { frets: ["x", 0, 2, 2, 1, 0], fingers: ["", "", 2, 3, 1, ""] },
+      "Adim": { frets: ["x", "x", 1, 2, 1, 2], fingers: ["", "", 1, 3, 2, 4] },
+      "A7M": { frets: ["x", 0, 2, 1, 2, 0], fingers: ["", "", 2, 1, 3, ""] },
+      "Am7": { frets: ["x", 0, 2, 0, 1, 0], fingers: ["", "", 2, "", 1, ""] },
+      "A7": { frets: ["x", 0, 2, 0, 2, 0], fingers: ["", "", 1, "", 2, ""] },
+
+      "A#": { frets: ["x", 1, 3, 3, 3, 1], barred: { fret: 1, from: 1, to: 5 }, fingers: ["", 1, 2, 3, 4, 1] },
+      "A#m": { frets: ["x", 1, 3, 3, 2, 1], barred: { fret: 1, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+      "Bb": { frets: ["x", 1, 3, 3, 3, 1], barred: { fret: 1, from: 1, to: 5 }, fingers: ["", 1, 2, 3, 4, 1] },
+      "Bbm": { frets: ["x", 1, 3, 3, 2, 1], barred: { fret: 1, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+
+      "B": { frets: ["x", 2, 4, 4, 4, 2], barred: { fret: 2, from: 1, to: 5 }, fingers: ["", 1, 2, 3, 4, 1] },
+      "Bm": { frets: ["x", 2, 4, 4, 3, 2], barred: { fret: 2, from: 1, to: 5 }, fingers: ["", 1, 3, 4, 2, 1] },
+      "B7": { frets: ["x", 2, 1, 2, 0, 2], fingers: ["", 2, 1, 3, "", 4] }
+    };
+
+    let activeCBChoice = { rootIdx: 0, intervals: [0, 4, 7], name: 'C' };
+
+    function updateStandaloneChordBuilder() {
+      const rootIdx = parseInt(document.getElementById('cb-root').value);
+      const chordKey = document.getElementById('cb-type').value;
       const rootNoteStr = notesArr[rootIdx];
       const displayRoot = getNoteString(rootIdx, rootNoteStr);
       const formulaObj = chordFormulas[chordKey];
@@ -502,24 +1059,170 @@
         return getNoteString((rootIdx + semis) % 12, displayRoot);
       });
 
-      document.getElementById('out-chord-name').innerText = displayRoot + formulaObj.suffix;
-      document.getElementById('out-chord-notes').innerText = `Notas: ${chordNotes.join(' - ')}`;
-      document.getElementById('out-chord-formula').innerText = `Fórmula: ${formulaObj.formula} (${formulaObj.name})`;
+      const chordFullName = displayRoot + formulaObj.suffix;
 
-      // Render piano highlighting these notes
-      renderPianoForNotes(formulaObj.intervals.map(semis => (rootIdx + semis) % 12), displayRoot + formulaObj.suffix);
+      document.getElementById('cb-out-name').innerText = chordFullName;
+      document.getElementById('cb-out-notes').innerText = `Notas: ${chordNotes.join(' - ')}`;
+      document.getElementById('cb-out-formula').innerText = `Fórmula: ${formulaObj.formula} (${formulaObj.name})`;
+
+      activeCBChoice = { rootIdx: rootIdx, intervals: formulaObj.intervals, name: chordFullName };
+      renderCBInstrumentView();
     }
 
-    // --- HARMONIC FIELD GENERATOR ---
-    const harmonicFieldDegreesMajor = [
-      { num: 'I', interval: 0, quality: 'maj7', nameSuffix: 'Maj7', ninth: '9' },
-      { num: 'ii', interval: 2, quality: 'm7', nameSuffix: 'm7', ninth: '9' },
-      { num: 'iii', interval: 4, quality: 'm7', nameSuffix: 'm7', ninth: 'b9' },
-      { num: 'IV', interval: 5, quality: 'maj7', nameSuffix: 'Maj7', ninth: '#11' },
-      { num: 'V', interval: 7, quality: '7', nameSuffix: '7', ninth: '9' },
-      { num: 'vi', interval: 9, quality: 'm7', nameSuffix: 'm7', ninth: '9' },
-      { num: 'vii°', interval: 11, quality: 'm7b5', nameSuffix: 'm7(b5)', ninth: 'b13' }
-    ];
+    function renderCBInstrumentView() {
+      const container = document.getElementById('cb-instrument-container');
+      container.innerHTML = '';
+      renderGuitarDiagram(container, activeCBChoice.name);
+    }
+
+    // --- DIAGRAMA DE VIOLÃO NA VERTICAL ---
+    function renderGuitarDiagram(container, chordName) {
+      if (!container) return;
+
+      let cleanBase = chordName.replace(/m7b5|dim7|dim|aug|m7|7M|7|m/g, "");
+      if (cleanBase.includes("/")) cleanBase = cleanBase.split("/")[0].trim();
+      
+      let chordObj = guitarShapesMap[chordName] || guitarShapesMap[cleanBase] || { frets: ["x", 0, 2, 2, 2, 0], fingers: ["", "", 1, 2, 3, ""] };
+      let shape = chordObj.frets;
+      let fingers = chordObj.fingers || [];
+      let barred = chordObj.barred;
+
+      let numericFrets = shape.filter(v => typeof v === 'number' && v > 0);
+      let minFret = numericFrets.length > 0 ? Math.min(...numericFrets) : 1;
+      let startFret = minFret <= 2 ? 1 : minFret;
+      if (startFret > 10) startFret = 10;
+
+      let svgHtml = `
+        <div class="flex flex-col items-center">
+          <svg width="180" height="190" viewBox="0 0 180 190" class="overflow-visible">
+      `;
+
+      if (startFret > 1) {
+        svgHtml += `<text x="18" y="72" fill="#fba100" font-size="11" font-weight="bold" text-anchor="middle">${startFret}</text>`;
+      }
+
+      const stringX = [45, 63, 81, 99, 117, 135];
+      const fretYStart = 50;
+      const fretHeight = 28;
+
+      for (let i = 0; i <= 4; i++) {
+        let y = fretYStart + (i * fretHeight);
+        let strokeWidth = (startFret === 1 && i === 0) ? 4 : 1.5;
+        let strokeColor = (startFret === 1 && i === 0) ? "#e1e1e6" : "#4a4d5e";
+        svgHtml += `<line x1="${stringX[0]}" y1="${y}" x2="${stringX[5]}" y2="${y}" stroke="${strokeColor}" stroke-width="${strokeWidth}" />`;
+      }
+
+      stringX.forEach((x, idx) => {
+        svgHtml += `<line x1="${x}" y1="${fretYStart}" x2="${x}" y2="${fretYStart + (4 * fretHeight)}" stroke="#6b7280" stroke-width="1.5" />`;
+      });
+
+      shape.forEach((val, idx) => {
+        let x = stringX[idx];
+        if (val === 0) {
+          svgHtml += `<text x="${x}" y="32" fill="#04d361" font-size="10" font-weight="bold" text-anchor="middle">O</text>`;
+        } else if (val === 'x' || val === 'X') {
+          svgHtml += `<text x="${x}" y="32" fill="#f75a68" font-size="10" font-weight="bold" text-anchor="middle">X</text>`;
+        }
+      });
+
+      if (barred) {
+        let relBarFret = barred.fret - startFret + 1;
+        if (relBarFret >= 1 && relBarFret <= 4) {
+          let barY = fretYStart + (relBarFret - 1) * fretHeight + (fretHeight / 2);
+          let startX = stringX[barred.from];
+          let endX = stringX[barred.to];
+          svgHtml += `<rect x="${startX - 6}" y="${barY - 7}" width="${endX - startX + 12}" height="14" rx="7" fill="#f75a68" opacity="0.9"/>`;
+          svgHtml += `<text x="${(startX + endX) / 2}" y="${barY + 3.5}" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">1</text>`;
+        }
+      }
+
+      shape.forEach((val, idx) => {
+        let x = stringX[idx];
+
+        if (typeof val === 'number' && val >= 1) {
+          let relativeFret = val - startFret + 1;
+          if (relativeFret >= 1 && relativeFret <= 4) {
+            let y = fretYStart + (relativeFret - 1) * fretHeight + (fretHeight / 2);
+
+            if (barred && barred.fret === val && idx >= barred.from && idx <= barred.to) return;
+
+            let fingerText = fingers[idx] || '';
+            svgHtml += `
+              <circle cx="${x}" cy="${y}" r="8" fill="#fba100" />
+              <text x="${x}" y="${y + 3.5}" fill="#0f1015" font-size="9" font-weight="extrabold" text-anchor="middle">${fingerText}</text>
+            `;
+          }
+        }
+      });
+
+      svgHtml += `
+          </svg>
+        </div>
+      `;
+
+      container.innerHTML = svgHtml;
+    }
+
+    let currentFieldMode = 'major';
+    let currentFieldType = 'triads';
+    let activeHFChord = { rootIdx: 7, intervals: [0, 4, 7], name: 'G' };
+
+    function setFieldMode(mode) {
+      currentFieldMode = mode;
+      document.getElementById('hf-btn-major').className = mode === 'major' ? "px-3 py-1.5 text-xs font-bold rounded-lg bg-primary text-appBg transition-all" : "px-3 py-1.5 text-xs font-bold rounded-lg bg-appBg text-textMuted hover:text-white border border-panelBorder transition-all";
+      document.getElementById('hf-btn-minor').className = mode === 'minor' ? "px-3 py-1.5 text-xs font-bold rounded-lg bg-secondary text-white transition-all" : "px-3 py-1.5 text-xs font-bold rounded-lg bg-appBg text-textMuted hover:text-white border border-panelBorder transition-all";
+      updateHarmonicField();
+    }
+
+    function setFieldType(type) {
+      currentFieldType = type;
+      document.getElementById('hf-type-triads').className = type === 'triads' ? "px-3 py-1.5 text-xs font-bold rounded-lg bg-accent text-appBg transition-all" : "px-3 py-1.5 text-xs font-bold rounded-lg bg-appBg text-textMuted hover:text-white border border-panelBorder transition-all";
+      document.getElementById('hf-type-tetrads').className = type === 'tetrads' ? "px-3 py-1.5 text-xs font-bold rounded-lg bg-accent text-appBg transition-all" : "px-3 py-1.5 text-xs font-bold rounded-lg bg-appBg text-textMuted hover:text-white border border-panelBorder transition-all";
+      updateHarmonicField();
+    }
+
+    const harmonicFieldData = {
+      major: {
+        triads: [
+          { num: 'I', interval: 0, quality: 'maj', nameSuffix: '', func: 'Tônica' },
+          { num: 'ii', interval: 2, quality: 'min', nameSuffix: 'm', func: 'Subdominante' },
+          { num: 'iii', interval: 4, quality: 'min', nameSuffix: 'm', func: 'Tônica' },
+          { num: 'IV', interval: 5, quality: 'maj', nameSuffix: '', func: 'Subdominante' },
+          { num: 'V', interval: 7, quality: 'maj', nameSuffix: '', func: 'Dominante' },
+          { num: 'vi', interval: 9, quality: 'min', nameSuffix: 'm', func: 'Tônica' },
+          { num: 'vii°', interval: 11, quality: 'dim', nameSuffix: 'dim', func: 'Dominante' }
+        ],
+        tetrads: [
+          { num: 'I', interval: 0, quality: 'maj7', nameSuffix: '7M', func: 'Tônica' },
+          { num: 'ii', interval: 2, quality: 'm7', nameSuffix: 'm7', func: 'Subdominante' },
+          { num: 'iii', interval: 4, quality: 'm7', nameSuffix: 'm7', func: 'Tônica' },
+          { num: 'IV', interval: 5, quality: 'maj7', nameSuffix: '7M', func: 'Subdominante' },
+          { num: 'V', interval: 7, quality: '7', nameSuffix: '7', func: 'Dominante' },
+          { num: 'vi', interval: 9, quality: 'm7', nameSuffix: 'm7', func: 'Tônica' },
+          { num: 'vii°', interval: 11, quality: 'm7b5', nameSuffix: 'm7b5', func: 'Dominante' }
+        ]
+      },
+      minor: {
+        triads: [
+          { num: 'im', interval: 0, quality: 'min', nameSuffix: 'm', func: 'Tônica' },
+          { num: 'ii°', interval: 2, quality: 'dim', nameSuffix: 'dim', func: 'Subdominante' },
+          { num: 'III', interval: 3, quality: 'maj', nameSuffix: '', func: 'Tônica' },
+          { num: 'ivm', interval: 5, quality: 'min', nameSuffix: 'm', func: 'Subdominante' },
+          { num: 'V', interval: 7, quality: 'maj', nameSuffix: '', func: 'Dominante' },
+          { num: 'VI', interval: 8, quality: 'maj', nameSuffix: '', func: 'Tônica' },
+          { num: 'VII', interval: 10, quality: 'maj', nameSuffix: '', func: 'Dominante' }
+        ],
+        tetrads: [
+          { num: 'im', interval: 0, quality: 'm7', nameSuffix: 'm7', func: 'Tônica' },
+          { num: 'iim7b5', interval: 2, quality: 'm7b5', nameSuffix: 'm7b5', func: 'Subdominante' },
+          { num: 'III', interval: 3, quality: 'maj7', nameSuffix: '7M', func: 'Tônica' },
+          { num: 'ivm', interval: 5, quality: 'm7', nameSuffix: 'm7', func: 'Subdominante' },
+          { num: 'V', interval: 7, quality: '7', nameSuffix: '7', func: 'Dominante' },
+          { num: 'VI', interval: 8, quality: 'maj7', nameSuffix: '7M', func: 'Tônica' },
+          { num: 'VII°', interval: 11, quality: 'dim7', nameSuffix: '°7', func: 'Dominante' }
+        ]
+      }
+    };
 
     function updateHarmonicField() {
       const rootIdx = parseInt(document.getElementById('hf-root').value);
@@ -529,94 +1232,273 @@
       const tbody = document.getElementById('hf-table-body');
       tbody.innerHTML = '';
 
-      harmonicFieldDegreesMajor.forEach(deg => {
+      const degrees = harmonicFieldData[currentFieldMode][currentFieldType];
+
+      degrees.forEach((deg, index) => {
         const chordRootIdx = (rootIdx + deg.interval) % 12;
         const chordRootStr = getNoteString(chordRootIdx, displayRoot);
         const chordFullName = chordRootStr + deg.nameSuffix;
-        
-        // Calculate notes for this chord
         const intervals = chordFormulas[deg.quality].intervals;
         const chordNotes = intervals.map(semis => getNoteString((chordRootIdx + semis) % 12, displayRoot));
 
         const tr = document.createElement('tr');
         tr.className = "border-b border-panelBorder/50 hover:bg-panelBorder/30 cursor-pointer transition-colors";
         tr.onclick = () => {
-          renderPianoForNotes(intervals.map(semis => (chordRootIdx + semis) % 12), chordFullName);
+          activeHFChord = { rootIdx: chordRootIdx, intervals: intervals, name: chordFullName };
+          renderHFInstrumentView();
         };
+
+        if (index === 0) {
+          activeHFChord = { rootIdx: chordRootIdx, intervals: intervals, name: chordFullName };
+          renderHFInstrumentView();
+        }
+        
+        const badgeColor = currentFieldMode === 'major' ? 'text-primary' : 'text-secondary';
+
         tr.innerHTML = `
-          <td class="p-3 font-bold text-secondary">${deg.num}</td>
+          <td class="p-3 font-bold ${badgeColor}">${deg.num}</td>
           <td class="p-3 font-extrabold text-white">${chordFullName}</td>
-          <td class="p-3 text-accent font-semibold">${deg.ninth}</td>
+          <td class="p-3 text-accent font-semibold">${deg.func}</td>
           <td class="p-3 text-textMuted text-xs">${chordNotes.join(' - ')}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // --- PIANO KEYBOARD RENDERER ---
-    const pianoStructure = [
-      { t: 'w', n: 'C', idx: 0 }, { t: 'b', n: 'C#', idx: 1 },
-      { t: 'w', n: 'D', idx: 2 }, { t: 'b', n: 'D#', idx: 3 },
-      { t: 'w', n: 'E', idx: 4 },
-      { t: 'w', n: 'F', idx: 5 }, { t: 'b', n: 'F#', idx: 6 },
-      { t: 'w', n: 'G', idx: 7 }, { t: 'b', n: 'G#', idx: 8 },
-      { t: 'w', n: 'A', idx: 9 }, { t: 'b', n: 'A#', idx: 10 },
-      { t: 'w', n: 'B', idx: 11 },
-      { t: 'w', n: 'C', idx: 0 }, { t: 'b', n: 'C#', idx: 1 },
-      { t: 'w', n: 'D', idx: 2 }, { t: 'b', n: 'D#', idx: 3 },
-      { t: 'w', n: 'E', idx: 4 }
-    ];
-
-    function renderPianoForNotes(highlightNoteIndices, chordTitle = '') {
-      const container = document.getElementById('piano-container');
-      if (!container) return;
+    function renderHFInstrumentView() {
+      document.getElementById('hf-chord-display-name').innerText = `Acorde: ${activeHFChord.name}`;
+      const container = document.getElementById('hf-instrument-container');
       container.innerHTML = '';
-
-      if (chordTitle) {
-        document.getElementById('piano-active-note-label').innerText = `Acorde: ${chordTitle}`;
-      }
-
-      const whiteKeyWidth = 40; 
-      let whiteCount = 0;
-
-      pianoStructure.forEach((key, i) => {
-        const isHighlighted = highlightNoteIndices.includes(key.idx);
-        const el = document.createElement('div');
-        
-        if (key.t === 'w') {
-          el.className = `w-10 h-full rounded-b-md border border-panelBorder flex items-end justify-center pb-2 text-[10px] font-bold transition-all z-0 ${
-            isHighlighted ? 'bg-accent text-appBg shadow-[0_0_15px_rgba(251,161,0,0.6)] font-black scale-95' : 'bg-[#e1e1e6] text-[#121214]'
-          }`;
-          el.innerHTML = key.n;
-          whiteCount++;
-        } else {
-          const leftOffset = (whiteCount * whiteKeyWidth) - (whiteKeyWidth * 0.35) - 4;
-          el.className = `absolute top-2 w-7 h-24 rounded-b-sm border-x border-b border-black flex items-end justify-center pb-1 text-[8px] font-bold transition-all z-10 ${
-            isHighlighted ? 'bg-accent text-appBg shadow-[0_0_15px_rgba(251,161,0,0.8)] font-black scale-95' : 'bg-[#29292e] text-white'
-          }`;
-          el.style.left = `${leftOffset}px`;
-          el.innerHTML = key.n;
-        }
-        container.appendChild(el);
-      });
+      renderGuitarDiagram(container, activeHFChord.name);
     }
 
-    // --- QUIZ ENGINE BY LEVELS ---
-    let quizState = {
-      level: 1,
-      score: 0,
-      lives: 3,
+    // --- METRONOME & COUNTDOWN TIMER ENGINE ---
+    let metronomeState = {
+      isPlaying: false,
+      bpm: 120,
+      beatsPerMeasure: 4,
+      currentBeat: 0,
       timer: null,
-      timeLeft: 15000,
-      maxTime: 15000,
-      currentAnswer: null,
-      answered: false
+      audioCtx: null,
+      totalMinutes: 5,
+      totalSeconds: 300,
+      remainingSeconds: 300,
+      countdownTimer: null
+    };
+
+    function setBPM(val) {
+      metronomeState.bpm = parseInt(val);
+      document.getElementById('bpm-display').innerText = metronomeState.bpm;
+      document.getElementById('bpm-slider').value = metronomeState.bpm;
+      if (metronomeState.isPlaying) {
+        restartMetronomeInterval();
+      }
+    }
+
+    function adjustBPM(amount) {
+      let newBpm = metronomeState.bpm + amount;
+      if (newBpm < 40) newBpm = 40;
+      if (newBpm > 240) newBpm = 240;
+      setBPM(newBpm);
+    }
+
+    function setTimerMinutes(val) {
+      metronomeState.totalMinutes = parseInt(val);
+      metronomeState.totalSeconds = metronomeState.totalMinutes * 60;
+      document.getElementById('timer-minutes-display').innerText = metronomeState.totalMinutes;
+      document.getElementById('timer-slider').value = metronomeState.totalMinutes;
+      if (!metronomeState.isPlaying) {
+        metronomeState.remainingSeconds = metronomeState.totalSeconds;
+        updateCountdownDisplay();
+      }
+    }
+
+    function adjustTimerMinutes(amount) {
+      let newMins = metronomeState.totalMinutes + amount;
+      if (newMins < 1) newMins = 1;
+      if (newMins > 20) newMins = 20;
+      setTimerMinutes(newMins);
+    }
+
+    function updateBeatCount(val) {
+      metronomeState.beatsPerMeasure = parseInt(val);
+      metronomeState.currentBeat = 0;
+      renderBeatDots();
+    }
+
+    function renderBeatDots() {
+      const container = document.getElementById('beat-dots-container');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 0; i < metronomeState.beatsPerMeasure; i++) {
+        const dot = document.createElement('div');
+        dot.id = `beat-dot-${i}`;
+        dot.className = "w-6 h-6 rounded-full border border-panelBorder bg-panelBorder transition-all duration-100";
+        container.appendChild(dot);
+      }
+    }
+
+    function updateCountdownDisplay() {
+      const mins = Math.floor(metronomeState.remainingSeconds / 60);
+      const secs = metronomeState.remainingSeconds % 60;
+      const displayStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      const el = document.getElementById('countdown-display');
+      if (el) el.innerText = displayStr;
+    }
+
+    function toggleMetronome() {
+      if (metronomeState.isPlaying) {
+        stopMetronome();
+      } else {
+        startMetronome();
+      }
+    }
+
+    function startMetronome() {
+      metronomeState.isPlaying = true;
+      metronomeState.currentBeat = 0;
+      
+      if (metronomeState.remainingSeconds <= 0) {
+        metronomeState.remainingSeconds = metronomeState.totalSeconds;
+      }
+      
+      const btn = document.getElementById('metronome-toggle-btn');
+      btn.className = "w-full bg-danger/20 border border-danger hover:bg-danger/30 text-danger font-extrabold text-lg py-4 rounded-xl transition-all shadow-[0_0_25px_rgba(247,90,104,0.3)] flex items-center justify-center gap-3";
+      document.getElementById('metronome-btn-icon').innerText = "⏹";
+      document.getElementById('metronome-btn-text').innerText = "Parar Metrônomo";
+
+      if (!metronomeState.audioCtx) {
+        metronomeState.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } else if (metronomeState.audioCtx.state === 'suspended') {
+        metronomeState.audioCtx.resume();
+      }
+
+      runMetronomeTick();
+      restartMetronomeInterval();
+      startCountdownInterval();
+    }
+
+    function stopMetronome() {
+      metronomeState.isPlaying = false;
+      clearInterval(metronomeState.timer);
+      metronomeState.timer = null;
+      clearInterval(metronomeState.countdownTimer);
+      metronomeState.countdownTimer = null;
+      metronomeState.currentBeat = 0;
+
+      const btn = document.getElementById('metronome-toggle-btn');
+      btn.className = "w-full bg-danger hover:bg-danger/80 text-white font-extrabold text-lg py-4 rounded-xl transition-all shadow-[0_0_25px_rgba(247,90,104,0.3)] flex items-center justify-center gap-3";
+      document.getElementById('metronome-btn-icon').innerText = "▶";
+      document.getElementById('metronome-btn-text').innerText = "Iniciar Metrônomo";
+
+      renderBeatDots();
+    }
+
+    function restartMetronomeInterval() {
+      if (metronomeState.timer) clearInterval(metronomeState.timer);
+      const intervalMs = (60 / metronomeState.bpm) * 1000;
+      metronomeState.timer = setInterval(() => {
+        runMetronomeTick();
+      }, intervalMs);
+    }
+
+    function startCountdownInterval() {
+      if (metronomeState.countdownTimer) clearInterval(metronomeState.countdownTimer);
+      metronomeState.countdownTimer = setInterval(() => {
+        if (metronomeState.remainingSeconds > 0) {
+          metronomeState.remainingSeconds--;
+          updateCountdownDisplay();
+        }
+
+        if (metronomeState.remainingSeconds <= 0) {
+          stopMetronome();
+          playCompletionSound();
+          alert("⏱️ Tempo de prática finalizado! Ótimo treino!");
+          metronomeState.remainingSeconds = metronomeState.totalSeconds;
+          updateCountdownDisplay();
+        }
+      }, 1000);
+    }
+
+    function playClickSound(isAccented) {
+      try {
+        const ctx = metronomeState.audioCtx;
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const envelope = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.value = isAccented ? 1000 : 750;
+
+        envelope.gain.setValueAtTime(1, ctx.currentTime);
+        envelope.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+
+        osc.connect(envelope);
+        envelope.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } catch (e) {
+        console.error("Erro ao reproduzir som do metrônomo:", e);
+      }
+    }
+
+    function playCompletionSound() {
+      try {
+        const ctx = metronomeState.audioCtx;
+        if (!ctx) return;
+        [0, 200, 400].forEach((delay, idx) => {
+          setTimeout(() => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = 523.25 + (idx * 130);
+            gain.gain.setValueAtTime(0.5, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.2);
+          }, delay);
+        });
+      } catch (e) {
+        console.error("Erro ao tocar alarme de conclusão:", e);
+      }
+    }
+
+    function runMetronomeTick() {
+      const beats = metronomeState.beatsPerMeasure;
+      const current = metronomeState.currentBeat;
+
+      for (let i = 0; i < beats; i++) {
+        const dot = document.getElementById(`beat-dot-${i}`);
+        if (dot) {
+          dot.className = "w-6 h-6 rounded-full border border-panelBorder bg-panelBorder transition-all duration-100";
+        }
+      }
+
+      const activeDot = document.getElementById(`beat-dot-${current}`);
+      if (activeDot) {
+        if (current === 0) {
+          activeDot.className = "w-7 h-7 rounded-full border-2 border-accent bg-accent shadow-[0_0_10px_rgba(251,161,0,0.8)] scale-110 transition-all duration-100";
+        } else {
+          activeDot.className = "w-7 h-7 rounded-full border-2 border-danger bg-danger shadow-[0_0_10px_rgba(247,90,104,0.8)] scale-110 transition-all duration-100";
+        }
+      }
+
+      playClickSound(current === 0);
+
+      metronomeState.currentBeat = (current + 1) % beats;
+    }
+
+    // --- QUIZ ENGINE ---
+    let quizState = {
+      level: 1, score: 0, lives: 3, timer: null, timeLeft: 15000, maxTime: 15000, currentAnswer: null, answered: false
     };
 
     function startQuiz() {
       const selectedRadio = document.querySelector('input[name="quiz-level"]:checked');
       quizState.level = selectedRadio ? parseInt(selectedRadio.value) : 1;
-      
       quizState.score = 0;
       quizState.lives = 3;
       updateQuizUI();
@@ -635,76 +1517,61 @@
         gameOver();
         return;
       }
-
       quizState.answered = false;
-
-      // Pick Random Root
       const rootIdx = Math.floor(Math.random() * 12);
       const rootNote = notesArr[rootIdx];
       const displayRoot = getNoteString(rootIdx, rootNote);
 
-      let targetDegree, correctChord, questionType;
+      let targetDegree, correctChord, questionType, keyContextLabel;
 
       if (quizState.level === 1) {
-        // Level 1: Basic Triads (I, ii, iii, IV, V, vi)
         const l1Degrees = [
-          { num: "I", interval: 0, suffix: "" },
-          { num: "ii", interval: 2, suffix: "m" },
-          { num: "iii", interval: 4, suffix: "m" },
-          { num: "IV", interval: 5, suffix: "" },
-          { num: "V", interval: 7, suffix: "" },
-          { num: "vi", interval: 9, suffix: "m" }
+          { num: "I (Maior)", interval: 0, suffix: "" },
+          { num: "ii (Menor)", interval: 2, suffix: "m" },
+          { num: "IV (Maior)", interval: 5, suffix: "" },
+          { num: "V (Maior)", interval: 7, suffix: "" },
+          { num: "vi (Menor)", interval: 9, suffix: "m" }
         ];
         targetDegree = l1Degrees[Math.floor(Math.random() * l1Degrees.length)];
-        const chordRootIdx = (rootIdx + targetDegree.interval) % 12;
-        correctChord = getNoteString(chordRootIdx, displayRoot) + targetDegree.suffix;
-        questionType = "Tríade Básica (Campo Harmônico)";
+        correctChord = getNoteString((rootIdx + targetDegree.interval) % 12, displayRoot) + targetDegree.suffix;
+        questionType = "Tríade Básica";
+        keyContextLabel = `${displayRoot} Maior`;
       } else if (quizState.level === 2) {
-        // Level 2: Tetrads with 7ths (Maj7, m7, 7)
         const l2Degrees = [
-          { num: "I", interval: 0, suffix: "Maj7" },
-          { num: "ii", interval: 2, suffix: "m7" },
-          { num: "iii", interval: 4, suffix: "m7" },
-          { num: "IV", interval: 5, suffix: "Maj7" },
-          { num: "V", interval: 7, suffix: "7" },
-          { num: "vi", interval: 9, suffix: "m7" },
-          { num: "vii°", interval: 11, suffix: "m7(b5)" }
+          { num: "I (Tétrade)", interval: 0, suffix: "7M" },
+          { num: "ii (Menor com 7ª)", interval: 2, suffix: "m7" },
+          { num: "V (Dominante)", interval: 7, suffix: "7" },
+          { num: "vii° (Meio Diminuto)", interval: 11, suffix: "m7b5" }
         ];
         targetDegree = l2Degrees[Math.floor(Math.random() * l2Degrees.length)];
-        const chordRootIdx = (rootIdx + targetDegree.interval) % 12;
-        correctChord = getNoteString(chordRootIdx, displayRoot) + targetDegree.suffix;
-        questionType = "Tétrade com Sétima";
+        correctChord = getNoteString((rootIdx + targetDegree.interval) % 12, displayRoot) + targetDegree.suffix;
+        questionType = "Tétrade do Campo Harmônico";
+        keyContextLabel = `${displayRoot} Maior`;
       } else {
-        // Level 3: Advanced (Min-Maj7, Diminished 7th, 9ths)
         const l3Types = [
-          { type: 'mMaj7', desc: 'Acorde Menor com 7ª Maior (m(Maj7))' },
-          { type: 'dim', desc: 'Tríade Diminuta' },
-          { type: 'maj9', desc: 'Acorde com 9ª Maior (Maj9)' },
-          { type: 'm9', desc: 'Acorde Menor com 9ª (m9)' }
+          { type: 'dim7', desc: 'Acorde Diminuto com 7ª (°7)' },
+          { type: 'aug', desc: 'Acorde Aumentado (aug)' },
+          { type: '7', desc: 'Dominante com 7ª' }
         ];
         const chosen = l3Types[Math.floor(Math.random() * l3Types.length)];
-        const fObj = chordFormulas[chosen.type];
-        correctChord = displayRoot + fObj.suffix;
+        correctChord = displayRoot + chordFormulas[chosen.type].suffix;
         questionType = chosen.desc;
-        targetDegree = { num: chosen.desc };
+        targetDegree = { num: "Acorde Especial" };
+        keyContextLabel = `${displayRoot}`;
       }
 
-      // Update question text
       document.getElementById('ui-question-type').innerText = questionType;
-      document.getElementById('ui-target-key').innerText = `${displayRoot} Maior`;
+      document.getElementById('ui-target-key').innerText = keyContextLabel;
       document.getElementById('ui-target-degree').innerText = `Grau ${targetDegree.num}`;
 
-      // Generate options
       let options = [correctChord];
       while (options.length < 4) {
         const rndRoot = Math.floor(Math.random() * 12);
         const rndStr = getNoteString(rndRoot, displayRoot);
-        const suffixes = quizState.level === 1 ? ["", "m", "dim"] : (quizState.level === 2 ? ["Maj7", "m7", "7", "m7(b5)"] : ["m(Maj7)", "Maj9", "m9", "dim"]);
+        const suffixes = quizState.level === 1 ? ["", "m", "dim"] : ["7M", "m7", "7", "m7b5", "°7"];
         const rndSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
         const wrongChord = rndStr + rndSuffix;
-        if (!options.includes(wrongChord)) {
-          options.push(wrongChord);
-        }
+        if (!options.includes(wrongChord)) options.push(wrongChord);
       }
 
       options = options.sort(() => Math.random() - 0.5);
@@ -712,7 +1579,6 @@
 
       const optionsContainer = document.getElementById('quiz-options');
       optionsContainer.innerHTML = '';
-
       options.forEach(opt => {
         const btn = document.createElement('button');
         btn.className = "bg-appBg hover:bg-panelBorder border-2 border-panelBorder text-white font-bold text-xl py-5 rounded-xl transition-all w-full";
@@ -728,7 +1594,6 @@
       clearInterval(quizState.timer);
       quizState.timeLeft = quizState.maxTime;
       const timerBar = document.getElementById('timer-bar');
-      
       timerBar.style.transition = 'none';
       timerBar.style.width = '100%';
       timerBar.style.backgroundColor = '#04d361';
@@ -740,7 +1605,6 @@
         const now = Date.now();
         const delta = now - lastTime;
         lastTime = now;
-        
         quizState.timeLeft -= delta;
         const percentage = (quizState.timeLeft / quizState.maxTime) * 100;
         timerBar.style.width = `${Math.max(0, percentage)}%`;
@@ -761,42 +1625,30 @@
       clearInterval(quizState.timer);
 
       const buttons = document.getElementById('quiz-options').children;
-
       if (selected === quizState.currentAnswer) {
         btnElement.classList.remove('bg-appBg', 'border-panelBorder');
         btnElement.classList.add('bg-primary/20', 'border-primary', 'text-primary');
-        
         const timeBonus = Math.floor((quizState.timeLeft / quizState.maxTime) * 50);
         quizState.score += (100 * quizState.level + timeBonus);
-
-        setTimeout(() => {
-          updateQuizUI();
-          generateQuizQuestion();
-        }, 1000);
+        setTimeout(() => { updateQuizUI(); generateQuizQuestion(); }, 1000);
       } else {
         btnElement.classList.remove('bg-appBg', 'border-panelBorder');
         btnElement.classList.add('bg-danger/20', 'border-danger', 'text-danger');
-
         for (let b of buttons) {
           if (b.innerText === quizState.currentAnswer) {
             b.classList.remove('bg-appBg', 'border-panelBorder');
             b.classList.add('bg-primary/20', 'border-primary', 'text-primary');
           }
         }
-
         quizState.lives--;
         updateQuizUI();
-
-        setTimeout(() => {
-          generateQuizQuestion();
-        }, 1500);
+        setTimeout(() => { generateQuizQuestion(); }, 1500);
       }
     }
 
     function handleQuizTimeout() {
       if (quizState.answered) return;
       quizState.answered = true;
-
       const buttons = document.getElementById('quiz-options').children;
       for (let b of buttons) {
         if (b.innerText === quizState.currentAnswer) {
@@ -804,13 +1656,9 @@
           b.classList.add('bg-primary/20', 'border-primary', 'text-primary');
         }
       }
-
       quizState.lives--;
       updateQuizUI();
-
-      setTimeout(() => {
-        generateQuizQuestion();
-      }, 1500);
+      setTimeout(() => { generateQuizQuestion(); }, 1500);
     }
 
     function gameOver() {
@@ -819,24 +1667,14 @@
       loadHighScores();
     }
 
-    // --- HIGHSCORES ---
     function saveScore() {
       const nameInput = document.getElementById('player-name').value.trim() || 'Anônimo';
       let scores = JSON.parse(localStorage.getItem('harmonia_pro_master_scores') || '[]');
-      
-      scores.push({
-        name: nameInput,
-        score: quizState.score,
-        level: quizState.level,
-        date: new Date().toLocaleDateString('pt-BR')
-      });
-
+      scores.push({ name: nameInput, score: quizState.score, level: quizState.level, date: new Date().toLocaleDateString('pt-BR') });
       scores.sort((a, b) => b.score - a.score);
       scores = scores.slice(0, 10);
-      
       localStorage.setItem('harmonia_pro_master_scores', JSON.stringify(scores));
       document.getElementById('player-name').value = '';
-      
       loadHighScores();
       switchView('hub');
     }
@@ -844,34 +1682,24 @@
     function loadHighScores() {
       const listContainer = document.getElementById('high-scores-list');
       if (!listContainer) return;
-
       let scores = JSON.parse(localStorage.getItem('harmonia_pro_master_scores') || '[]');
       listContainer.innerHTML = '';
-
       if (scores.length === 0) {
         listContainer.innerHTML = '<p class="text-xs text-textMuted">Nenhuma pontuação registrada.</p>';
         return;
       }
-
       scores.forEach((s, i) => {
         const div = document.createElement('div');
         div.className = "flex justify-between items-center bg-appBg p-3 rounded-lg border border-panelBorder text-sm";
-        
-        let rankColor = "text-textMuted";
-        if (i === 0) rankColor = "text-yellow-400 font-bold text-base";
-        else if (i === 1) rankColor = "text-gray-300 font-bold";
-        else if (i === 2) rankColor = "text-amber-600 font-bold";
-
+        let rankColor = i === 0 ? "text-yellow-400 font-bold text-base" : (i === 1 ? "text-gray-300 font-bold" : (i === 2 ? "text-amber-600 font-bold" : "text-textMuted"));
         div.innerHTML = `
           <div class="flex items-center gap-3">
             <span class="w-4 text-center ${rankColor}">#${i+1}</span>
-            <div>
-              <span class="text-white font-medium block">${s.name}</span>
-              <span class="text-[10px] text-textMuted">Nível ${s.level} • ${s.date}</span>
-            </div>
+            <span class="font-bold text-white">${s.name}</span>
           </div>
           <div class="text-right">
-            <span class="text-primary font-bold block">${s.score} pts</span>
+            <span class="font-extrabold text-primary">${s.score} pts</span>
+            <span class="text-[10px] text-textMuted block">Nível ${s.level} • ${s.date}</span>
           </div>
         `;
         listContainer.appendChild(div);
@@ -879,17 +1707,15 @@
     }
 
     function clearScores() {
-      if (confirm("Tem certeza que deseja limpar o ranking?")) {
+      if (confirm("Deseja limpar todas as pontuações salvas?")) {
         localStorage.removeItem('harmonia_pro_master_scores');
         loadHighScores();
       }
     }
 
-    // Init on load
     window.onload = () => {
+      initSQLiteDatabase();
       loadHighScores();
-      populateScalesTable();
-      renderPianoForNotes([0, 4, 7], "C");
     };
   </script>
 </body>
